@@ -20,8 +20,10 @@ router.post('/shopifyUser', userController.postShopifyUser);
 
 
 router.get('/mobile',  whatsappController.getCountrycode);
+
 router.post('/whatsApp',  whatsappController.postWhatsAppData);
 router.get('/whatsApp',  whatsappController.getWhatsAppData);
+
 router.get('/whatsAppData',  whatsappController.whatsAppData);
 router.get('/editWhatsApp/:id',  whatsappController.getWhatsAppDataById);
 router.put('/updateWhatsApp/:id',  whatsappController.updateWhatsApp);

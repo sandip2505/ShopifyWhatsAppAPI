@@ -17,17 +17,21 @@ headers.isStrongPassword = async (password) => {
 }
 
 
-headers.performBlankValidations = async (fields) => {
-  for (const [key, value] of Object.entries(fields)) {
-
-    if (await headers.isBlank(value)) {
-      return { success: false, message: `${key} cannot be blank` };
+headers.performBlankValidations = async (fields, messages) => {
+  let validationResult = { success: true };
+  
+  Object.entries(fields).forEach(([key, value]) => {
+    if (headers.isBlank(value)) {
+      validationResult = { success: false, message: messages[key] || `${key} cannot be blank` };
+      return false;
     }
-  }
-  return { success: true };
+  });
+
+  return validationResult;
 };
 
-headers.isBlank = async (value) => {
+
+headers.isBlank = (value) => {
   return value === undefined || value === null || value === '';
 };
 

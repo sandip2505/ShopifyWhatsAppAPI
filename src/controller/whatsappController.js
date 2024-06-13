@@ -48,19 +48,25 @@ apicontroller.postWhatsAppData = async (req, res) => {
       shopName
     } = req.body;
 
-    const validationResults = await validation.performBlankValidations({
-      mobile_number,
-      position,
-      preFilledValue,
-      popUpMessage,
-      shopName
-    });
-
-    if (!validationResults.success) {
-      console.log(validationResults.message);
-      return res.status(400).json({ message: validationResults.message });
+    // Check each required field for blank values in a sequential manner
+    if (!mobile_number) {
+      return res.status(400).json({ message: 'Mobile number is required.' });
     }
-
+    if (!position) {
+      return res.status(400).json({ message: 'Position is required.' });
+    }
+    if (!preFilledValue) {
+      return res.status(400).json({ message: 'Pre-filled value is required.' });
+    }
+    if (!selectedIcon) {
+      return res.status(400).json({ message: 'Selected icon is required.' });
+    }
+    if (!popUpMessage) {
+      return res.status(400).json({ message: 'Pop-up message is required.' });
+    }
+    if (!shopName) {
+      return res.status(400).json({ message: 'Shop name is required.' });
+    }
 
     const existingShop = await WhatsApp.findOne({ shopName });
 
@@ -104,6 +110,8 @@ apicontroller.postWhatsAppData = async (req, res) => {
   }
 };
 
+
+
 apicontroller.getWhatsAppData = async (req, res) => {
   try {
     const shopName = req.query.shopName || null;
@@ -135,7 +143,7 @@ apicontroller.getWhatsAppData = async (req, res) => {
 apicontroller.whatsAppData = async (req, res) => {
   try {
 
-    const whatsAppData = await WhatsApp.find({ deletedAt: null  });
+    const whatsAppData = await WhatsApp.find({ deletedAt: null });
 
     // Define the base URL and uploads path
     const baseURL = process.env.BASEURL;
