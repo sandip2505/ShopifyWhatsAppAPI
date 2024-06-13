@@ -5,7 +5,7 @@ const http = require('http');
 const ngrok = require('@ngrok/ngrok');
 const fileUpload = require("express-fileupload");
 const bodyParser = require('body-parser');
-const mongoose = require('./db/db');
+const mongoose = require('./src/db/db');
 const app = express();
 app.use(express.json());
 
@@ -19,7 +19,7 @@ app.use(bodyParser.json());
 const PORT = process.env.PORT || 3000;
 
 // Require your routes and use them here
-const userRoute = require('./route/userRoute');
+const userRoute = require('./src/route/userRoute');
 app.use('/api', userRoute);
 app.get('/', (req, res) => {
   res.send('API is running');
