@@ -35,7 +35,6 @@ apicontroller.getCountrycode = async (req, res) => {
     res.status(500).json({ error: 'Internal Server Error' });
   }
 };
-
 apicontroller.postWhatsAppData = async (req, res) => {
   try {
     const {
@@ -49,30 +48,16 @@ apicontroller.postWhatsAppData = async (req, res) => {
       shopName
     } = req.body;
 
-    // Check each required field for blank values in a sequential manner
-    if (!mobile_number) {
-      return res.status(400).json({ message: 'Mobile number is required.' });
-    }
-    if (!position) {
-      return res.status(400).json({ message: 'Position is required.' });
-    }
-    if (!preFilledValue) {
-      return res.status(400).json({ message: 'Pre-filled value is required.' });
-    }
-    if (!selectedIcon) {
-      return res.status(400).json({ message: 'Selected icon is required.' });
-    }
-    if (!popUpMessage) {
-      return res.status(400).json({ message: 'Pop-up message is required.' });
-    }
-    if (!shopName) {
-      return res.status(400).json({ message: 'Shop name is required.' });
-    }
+    if (!mobile_number) return res.status(400).json({ message: 'Mobile number is required.' });
+    if (!position) return res.status(400).json({ message: 'Position is required.' });
+    if (!preFilledValue) return res.status(400).json({ message: 'Pre-filled value is required.' });
+    if (!selectedIcon) return res.status(400).json({ message: 'Selected icon is required.' });
+    if (!popUpMessage) return res.status(400).json({ message: 'Pop-up message is required.' });
+    if (!shopName) return res.status(400).json({ message: 'Shop name is required.' });
 
     const existingShop = await WhatsApp.findOne({ shopName });
 
     if (existingShop) {
-
       await WhatsApp.findOneAndUpdate(
         { _id: existingShop._id },
         {
@@ -113,23 +98,18 @@ apicontroller.postWhatsAppData = async (req, res) => {
   }
 };
 
-
-
 apicontroller.getWhatsAppData = async (req, res) => {
   try {
     const shopName = req.query.shopName || null;
-    console.log(await WhatsApp.find({ deletedAt: null }))
+    console.log(await WhatsApp.find({ deletedAt: null }));
     const whatsAppData = await WhatsApp.findOne({ deletedAt: null, shopName: shopName });
 
     if (!whatsAppData) {
       return res.status(200).json({ message: 'WhatsApp data not found' });
     }
 
-    // Define the base URL and uploads path
     const baseURL = process.env.BASEURL;
     const uploadsPath = '/uploads/';
-
-    // Modify the data to include the full URL for the icon
     const iconFileName = whatsAppData.icon.replace('icon_', '') + '.png';
     const fullIconURL = `${baseURL}${uploadsPath}${iconFileName}`;
     const modifiedData = {
@@ -139,9 +119,12 @@ apicontroller.getWhatsAppData = async (req, res) => {
 
     res.status(200).json({ whatsAppData: modifiedData });
   } catch (error) {
+    console.error('Error in getWhatsAppData:', error);
     res.status(500).json({ message: error.message });
   }
 };
+
+
 
 apicontroller.whatsAppData = async (req, res) => {
   try {
