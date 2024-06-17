@@ -244,6 +244,14 @@ apicontroller.deleteWhatsApp = async (req, res) => {
   }
 }
 
+apicontroller.version = async (req, res) => {
+  try {
+    res.status(201).json({ version: '1.5' });
+  } catch (error) {
+    console.log(error)
+  }
+}
+
 
 apicontroller.postHeaderData = async (req, res) => {
   try {
