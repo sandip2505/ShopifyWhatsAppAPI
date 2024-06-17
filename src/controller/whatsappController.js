@@ -39,6 +39,7 @@ apicontroller.getCountrycode = async (req, res) => {
 apicontroller.postWhatsAppData = async (req, res) => {
   try {
     const {
+      country_code,
       mobile_number,
       position,
       preFilledValue,
@@ -75,6 +76,7 @@ apicontroller.postWhatsAppData = async (req, res) => {
       await WhatsApp.findOneAndUpdate(
         { _id: existingShop._id },
         {
+          country_code,
           mobile_number,
           position,
           prefield_message: preFilledValue,
@@ -92,6 +94,7 @@ apicontroller.postWhatsAppData = async (req, res) => {
         return res.status(404).json({ message: 'Mobile number already exists' });
       }
       const newWhatsApp = new WhatsApp({
+        country_code,
         mobile_number,
         position,
         prefield_message: preFilledValue,

@@ -1,58 +1,15 @@
-// const mongoose = require('mongoose');
-
-// const whatsappSchema = new mongoose.Schema({
-//   mobile_number: {
-//     type: String,
-//     unique: true
-//   },
-//   position: {
-//     type: String,
-//   },
-//   prefield_message: {
-//     type: String,
-//   },
-//   icon: {
-//     type: String,
-//   },
-//   popup_message: {
-//     type: String,
-//   },
-//   shopName: {
-//     type: String,
-//   },
-//   status: {
-//     type: Boolean,
-//     default: true
-//   },
-//   createdAt: {
-//     type: Date,
-//     default: Date.now
-//   },
-//   updatedAt: {
-//     type: Date,
-//     default: Date.now
-//   },
-//   deletedAt: {
-//     type: Date,
-//     default: null
-//   },
-// });
-
-
-
-// const WhatsApp = mongoose.model('whatsapp', whatsappSchema);
-
-// module.exports = WhatsApp;
-
 
 const mongoose = require('mongoose');
 
 const whatsappSchema = new mongoose.Schema({
+  country_code: {
+    type: String,
+    trim: true
+  },
   mobile_number: {
     type: String,
     unique: true,
     required: [true, 'Mobile number is required'],
-    match: [/^\+\d{1,3}\d{9,15}$/, 'Please provide a valid mobile number with country code']
   },
   position: {
     type: String,
