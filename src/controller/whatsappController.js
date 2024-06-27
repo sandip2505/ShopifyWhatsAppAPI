@@ -74,10 +74,6 @@ apicontroller.postWhatsAppData = async (req, res) => {
       const updatedData = await WhatsApp.findOne({ _id: existingShop._id });
       return res.status(200).json({ message: 'WhatsApp data updated successfully', userdata: updatedData });
     } else {
-      const existingMobile = await WhatsApp.findOne({ mobile_number, deletedAt: null });
-      if (existingMobile) {
-        return res.status(404).json({ message: 'Mobile number already exists' });
-      }
       const newWhatsApp = new WhatsApp({
         country_code,
         mobile_number,
@@ -229,7 +225,7 @@ apicontroller.deleteWhatsApp = async (req, res) => {
 
 apicontroller.version = async (req, res) => {
   try {
-    res.status(201).json({ version: '1.5' });
+    res.status(201).json({ version: '2.0.0' });
   } catch (error) {
     console.log(error)
   }

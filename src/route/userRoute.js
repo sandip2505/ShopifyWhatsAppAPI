@@ -35,7 +35,7 @@ router.get('/whatsAppData',  whatsappController.whatsAppData);
 router.get('/editWhatsApp/:id',  whatsappController.getWhatsAppDataById);
 router.put('/updateWhatsApp/:id',  whatsappController.updateWhatsApp);
 router.delete('/deleteWhatsApp/:id',  whatsappController.deleteWhatsApp);
-router.delete('/version',  whatsappController.version);
+router.get('/version',  whatsappController.version);
 
 
 // header routes
