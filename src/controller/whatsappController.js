@@ -201,9 +201,6 @@ apicontroller.updateWhatsApp = async (req, res) => {
     if (!validationResults.success) {
       return res.status(400).json({ message: validationResults.message });
     }
-    if (existingMobile) {
-      return res.status(404).json({ message: 'Mobile number already exists' });
-    }
     const updateWhatsApp = await WhatsApp.findOneAndUpdate({ _id: id }, { mobile_number, position, prefield_message: preFilledValue, icon: selectedIcon, popup_message: popUpMessage, status: enabled });
     const updatedData = await WhatsApp.findOne({ _id: updateWhatsApp._id });
     console.log(updatedData, "updatedData")
