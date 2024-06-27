@@ -8,7 +8,6 @@ const whatsappSchema = new mongoose.Schema({
   },
   mobile_number: {
     type: String,
-    unique: true,
     required: [true, 'Mobile number is required'],
   },
   position: {
