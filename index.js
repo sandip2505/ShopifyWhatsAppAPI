@@ -8,6 +8,7 @@ const bodyParser = require('body-parser');
 const mongoose = require('./src/db/db');
 const app = express();
 app.use(express.json());
+app.set('trust proxy', true);
 
 app.use(cors());
 
