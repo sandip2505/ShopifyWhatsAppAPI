@@ -293,7 +293,7 @@ apicontroller.deleteWhatsApp = async (req, res) => {
 
 apicontroller.version = async (req, res) => {
   try {
-    res.status(201).json({ version: '2.1.0' });
+    res.status(201).json({ version: '2.2.0' });
   } catch (error) {
     console.log(error)
   }
