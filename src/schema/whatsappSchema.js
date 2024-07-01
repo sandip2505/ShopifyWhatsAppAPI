@@ -8,7 +8,6 @@ const whatsappSchema = new mongoose.Schema({
   },
   mobile_number: {
     type: String,
-    required: true,
   },
   position: {
     type: String,
@@ -35,13 +34,22 @@ const whatsappSchema = new mongoose.Schema({
     default: true,
     enum: [true, false]
   },
+  createdAt: {
+    type: Date,
+    default: Date.now
+  },
+  updatedAt: {
+    type: Date,
+    default: null
+  },
   deletedAt: {
     type: Date,
     default: null
   }
 });
 
-
+// Remove any existing index on mobile_number
+whatsappSchema.index({ mobile_number: 1 }, { unique: false });
 
 const WhatsApp = mongoose.model('WhatsApp', whatsappSchema);
 

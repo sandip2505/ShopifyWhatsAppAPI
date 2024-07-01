@@ -36,6 +36,65 @@ apicontroller.getCountrycode = async (req, res) => {
   }
 };
 
+// apicontroller.postWhatsAppData = async (req, res) => {
+//   try {
+//     const {
+//       country_code,
+//       mobile_number,
+//       position,
+//       preFilledValue,
+//       selectedIcon,
+//       popUpMessage,
+//       enabled,
+//       shopName
+//     } = req.body;
+
+//     if (!mobile_number) return res.status(400).json({ message: 'Mobile number is required.' });
+//     if (!position) return res.status(400).json({ message: 'Position is required.' });
+//     if (!preFilledValue) return res.status(400).json({ message: 'Pre-filled value is required.' });
+//     if (!selectedIcon) return res.status(400).json({ message: 'Selected icon is required.' });
+//     if (!popUpMessage) return res.status(400).json({ message: 'Pop-up message is required.' });
+//     if (!shopName) return res.status(400).json({ message: 'Shop name is required.' });
+
+//     const existingShop = await WhatsApp.findOne({ shopName });
+
+//     if (existingShop) {
+//       await WhatsApp.findOneAndUpdate(
+//         { _id: existingShop._id },
+//         {
+//           country_code,
+//           mobile_number,
+//           position,
+//           prefield_message: preFilledValue,
+//           icon: selectedIcon,
+//           popup_message: popUpMessage,
+//           status: enabled
+//         }
+//       );
+
+//       const updatedData = await WhatsApp.findOne({ _id: existingShop._id });
+//       return res.status(200).json({ message: 'WhatsApp data updated successfully', userdata: updatedData });
+//     } else {
+//       const newWhatsApp = new WhatsApp({
+//         country_code,
+//         mobile_number,
+//         position,
+//         prefield_message: preFilledValue,
+//         icon: selectedIcon,
+//         popup_message: popUpMessage,
+//         status: enabled,
+//         shopName
+//       });
+
+//       const addedData = await newWhatsApp.save();
+//       return res.status(201).json({ message: 'WhatsApp data saved successfully', userdata: addedData });
+//     }
+//   } catch (error) {
+//     console.error('Error in postWhatsAppData:', error);
+//     return res.status(500).json({ message: error.message });
+//   }
+// };
+
 apicontroller.postWhatsAppData = async (req, res) => {
   try {
     const {
@@ -49,49 +108,60 @@ apicontroller.postWhatsAppData = async (req, res) => {
       shopName
     } = req.body;
 
-    if (!mobile_number) return res.status(400).json({ message: 'Mobile number is required.' });
-    if (!position) return res.status(400).json({ message: 'Position is required.' });
-    if (!preFilledValue) return res.status(400).json({ message: 'Pre-filled value is required.' });
-    if (!selectedIcon) return res.status(400).json({ message: 'Selected icon is required.' });
-    if (!popUpMessage) return res.status(400).json({ message: 'Pop-up message is required.' });
-    if (!shopName) return res.status(400).json({ message: 'Shop name is required.' });
-
-    const existingShop = await WhatsApp.findOne({ shopName });
-
-    if (existingShop) {
-      await WhatsApp.findOneAndUpdate(
-        { _id: existingShop._id },
-        {
-          country_code,
-          mobile_number,
-          position,
-          prefield_message: preFilledValue,
-          icon: selectedIcon,
-          popup_message: popUpMessage,
-          status: enabled
-        }
-      );
-
-      const updatedData = await WhatsApp.findOne({ _id: existingShop._id });
-      return res.status(200).json({ message: 'WhatsApp data updated successfully', userdata: updatedData });
-    } else {
-      const newWhatsApp = new WhatsApp({
-        country_code,
-        mobile_number,
-        position,
-        prefield_message: preFilledValue,
-        icon: selectedIcon,
-        popup_message: popUpMessage,
-        status: enabled,
-        shopName
-      });
-
-      const addedData = await newWhatsApp.save();
-      return res.status(201).json({ message: 'WhatsApp data saved successfully', userdata: addedData });
+    // Validate required fields
+    console.log(typeof mobile_number, "mobile_number")
+    if (typeof mobile_number === 'string') {
+      return res.status(400).json({ message: 'Please Enter Valid number' });
     }
+
+    const requiredFields = { mobile_number, position, preFilledValue, selectedIcon, popUpMessage, shopName };
+    for (const [field, value] of Object.entries(requiredFields)) {
+      if (!value) return res.status(400).json({ message: `${field.replace(/([A-Z])/g, ' $1').trim()} is required.` });
+    }
+
+    // Ensure the unique index on mobile_number is removed
+    await WhatsApp.collection.dropIndex("mobile_number_1").catch(err => {
+      if (err.code !== 27) console.error("Error dropping index:", err);
+    });
+
+    const updateData = {
+      country_code,
+      mobile_number,
+      position,
+      prefield_message: preFilledValue,
+      icon: selectedIcon,
+      popup_message: popUpMessage,
+      status: enabled
+    };
+
+    const options = {
+      new: true,
+      upsert: true,
+      setDefaultsOnInsert: true,
+      runValidators: true
+    };
+
+    const updatedData = await WhatsApp.findOneAndUpdate(
+      { shopName },
+      updateData,
+      options
+    );
+
+    // Check if the document was just created or updated
+    const wasJustCreated = updatedData.createdAt && updatedData.updatedAt &&
+      updatedData.createdAt.getTime() === updatedData.updatedAt.getTime();
+
+    const statusCode = wasJustCreated ? 201 : 200;
+    const message = wasJustCreated ? 'WhatsApp data saved successfully' : 'WhatsApp data updated successfully';
+
+    return res.status(statusCode).json({ message, userdata: updatedData });
+
   } catch (error) {
     console.error('Error in postWhatsAppData:', error);
-    return res.status(500).json({ message: error.message });
+    if (error.code === 11000) {
+      return res.status(409).json({ message: 'A record with this shop name already exists. Please use a unique shop name.' });
+    }
+    return res.status(500).json({ message: 'An error occurred while processing your request.' });
   }
 };
 
