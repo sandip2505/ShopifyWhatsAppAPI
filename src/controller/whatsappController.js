@@ -108,11 +108,7 @@ apicontroller.postWhatsAppData = async (req, res) => {
       shopName
     } = req.body;
 
-    // Validate required fields
-    console.log(typeof mobile_number, "mobile_number")
-    if (typeof mobile_number === 'string') {
-      return res.status(400).json({ message: 'Please Enter Valid number' });
-    }
+    // Validate required fields 
 
     const requiredFields = { mobile_number, position, preFilledValue, selectedIcon, popUpMessage, shopName };
     for (const [field, value] of Object.entries(requiredFields)) {
