@@ -296,22 +296,49 @@ apicontroller.version = async (req, res) => {
 }
 
 
+// apicontroller.postHeaderData = async (req, res) => {
+//   try {
+//     const { title, header, body, storename } = req.body;
+
+//     const validationResults = await validation.performBlankValidations({ title, header });
+    
+//     if (!validationResults.success) {
+//       return res.status(400).json({ message: validationResults.message });
+//     }
+
+//     const newHeader = new Header({ title, header, body, storename });
+//     await newHeader.save();
+//     res.status(201).json({ message: 'Header data saved successfully', headerdata: newHeader });
+//   } catch (error) {
+//     console.log(error)
+//   }
+// }
+
 apicontroller.postHeaderData = async (req, res) => {
   try {
     const { title, header, body, storename } = req.body;
 
-    // const validationResults = await validation.performBlankValidations({ title, header, body });
-    // if (!validationResults.success) {
-    //   return res.status(400).json({ message: validationResults.message });
-    // }
+    const validationResults = await validation.performBlankValidations({ title, header });
+    
+    if (!validationResults.success) {
+      return res.status(400).json({ message: validationResults.message });
+    }
+
+    const existingHeader = await Header.findOne({ title, storename });
+    
+    if (existingHeader) {
+      return res.status(400).json({ message: 'Subject title already exists' });
+    }
 
     const newHeader = new Header({ title, header, body, storename });
     await newHeader.save();
     res.status(201).json({ message: 'Header data saved successfully', headerdata: newHeader });
   } catch (error) {
-    console.log(error)
+    console.log(error);
+    res.status(500).json({ message: 'An error occurred while saving the header data.' });
   }
 }
+
 
 apicontroller.getHeaderData = async (req, res) => {
   try {
@@ -334,21 +361,59 @@ apicontroller.getHeaderDatanById = async (req, res) => {
   }
 }
 
+// apicontroller.updateHeaderData = async (req, res) => {
+//   try {
+//     const id = req.params.id;
+//     const { title, header, body } = req.body;
+//     // const validationResults = await validation.performBlankValidations({ title, header, body });
+//     // if (!validationResults.success) {
+//     //   return res.status(400).json({ message: validationResults.message });
+//     // }
+//     const updateHeader = await Header.findOneAndUpdate({ _id: id }, { title, header, body });
+//     const updatedData = await Header.findOne({ _id: updateHeader._id });
+//     res.status(201).json({ message: 'Header data updated successfully', headerdata: updatedData });
+//   } catch (error) {
+//     console.log(error)
+//   }
+// }
+
+
 apicontroller.updateHeaderData = async (req, res) => {
   try {
     const id = req.params.id;
-    const { title, header, body } = req.body;
-    // const validationResults = await validation.performBlankValidations({ title, header, body });
-    // if (!validationResults.success) {
-    //   return res.status(400).json({ message: validationResults.message });
-    // }
-    const updateHeader = await Header.findOneAndUpdate({ _id: id }, { title, header, body });
-    const updatedData = await Header.findOne({ _id: updateHeader._id });
-    res.status(201).json({ message: 'Header data updated successfully', headerdata: updatedData });
+    const { title, header, body, storename } = req.body;
+
+    // Perform validation checks for title and header
+    const validationResults = await validation.performBlankValidations({ title, header });
+    if (!validationResults.success) {
+      return res.status(400).json({ message: validationResults.message });
+    }
+
+    // Check if the title already exists for a different header in the same store
+    const existingHeader = await Header.findOne({ title, storename, _id: { $ne: id } });
+    if (existingHeader) {
+      return res.status(400).json({ message: 'Subject title already exists' });
+    }
+
+    // Update the header data
+    const updatedHeader = await Header.findOneAndUpdate(
+      { _id: id },
+      { title, header, body },
+      { new: true } // Return the updated document
+    );
+
+    // Check if the header was successfully updated
+    if (!updatedHeader) {
+      return res.status(404).json({ message: 'Header not found' });
+    }
+
+    res.status(200).json({ message: 'Header data updated successfully', headerdata: updatedHeader });
   } catch (error) {
-    console.log(error)
+    console.log(error);
+    res.status(500).json({ message: 'An error occurred while updating the header data.' });
   }
-}
+};
+
 
 apicontroller.deleteHeaderData = async (req, res) => {
   try {

@@ -40,10 +40,10 @@ router.get('/version',  whatsappController.version);
 
 // header routes
 
-// router.post('/header',  whatsappController.postHeaderData);
-// router.get('/header',  whatsappController.getHeaderData);
-// router.get('/header/:id',  whatsappController.getHeaderDatanById);
-// router.put('/header/:id',  whatsappController.updateHeaderData);
-// router.delete('/header/:id',  whatsappController.deleteHeaderData);
+router.post('/header',  whatsappController.postHeaderData);
+router.get('/header',  whatsappController.getHeaderData);
+router.get('/header/:id',  whatsappController.getHeaderDatanById);
+router.put('/header/:id',  whatsappController.updateHeaderData);
+router.delete('/header/:id',  whatsappController.deleteHeaderData);
 
 module.exports = router;

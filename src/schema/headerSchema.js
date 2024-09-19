@@ -43,12 +43,10 @@ const headerSchema = new mongoose.Schema({
   header: {
     type: String,
     trim: true,
-    required: [true, 'Header is required']
   },
   body: {
     type: String,
     trim: true,
-    required: [true, 'Body is required']
   },
   storename: {
     type: String,
