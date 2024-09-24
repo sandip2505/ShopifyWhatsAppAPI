@@ -301,7 +301,7 @@ apicontroller.version = async (req, res) => {
 //     const { title, header, body, storename } = req.body;
 
 //     const validationResults = await validation.performBlankValidations({ title, header });
-    
+
 //     if (!validationResults.success) {
 //       return res.status(400).json({ message: validationResults.message });
 //     }
@@ -319,13 +319,13 @@ apicontroller.postHeaderData = async (req, res) => {
     const { title, header, body, storename } = req.body;
 
     const validationResults = await validation.performBlankValidations({ title, header });
-    
+
     if (!validationResults.success) {
       return res.status(400).json({ message: validationResults.message });
     }
 
-    const existingHeader = await Header.findOne({ title, storename });
-    
+    const existingHeader = await Header.findOne({ title, storename, deletedAt: null });
+
     if (existingHeader) {
       return res.status(400).json({ message: 'Subject title already exists' });
     }
@@ -420,6 +420,14 @@ apicontroller.deleteHeaderData = async (req, res) => {
     const id = req.params.id;
     const deleteHeader = await Header.findOneAndUpdate({ _id: id }, { deletedAt: Date.now() });
     res.status(201).json({ message: 'Header data deleted successfully' });
+  } catch (error) {
+    console.log(error)
+  }
+}
+apicontroller.HeaderData = async (req, res) => {
+  try {
+    const deleteHeader = await Header.find({ deletedAt: null });
+    res.status(200).json({ deleteHeader});
   } catch (error) {
     console.log(error)
   }

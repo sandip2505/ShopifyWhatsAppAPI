@@ -45,5 +45,6 @@ router.get('/header', checkApiKey, whatsappController.getHeaderData);
 router.get('/header/:id', checkApiKey, whatsappController.getHeaderDatanById);
 router.put('/header/:id', checkApiKey, whatsappController.updateHeaderData);
 router.delete('/header/:id', checkApiKey, whatsappController.deleteHeaderData);
+router.get('/headers', checkApiKey, whatsappController.HeaderData);
 
 module.exports = router;

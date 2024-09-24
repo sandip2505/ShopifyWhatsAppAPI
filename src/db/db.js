@@ -11,7 +11,6 @@ const dbOptions = {
   connectTimeoutMS: 30000,
   socketTimeoutMS: 45000,
 };
-
 const connectToDatabase = async () => {
   try {
     await mongoose.connect(process.env.MONGO_URI, dbOptions);
