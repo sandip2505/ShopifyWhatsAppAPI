@@ -390,7 +390,7 @@ apicontroller.updateHeaderData = async (req, res) => {
     }
 
     // Check if the title already exists for a different header in the same store
-    const existingHeader = await Header.findOne({ title, storename, _id: { $ne: id } });
+    const existingHeader = await Header.findOne({ title, storename, _id: { $ne: id } , deletedAt: null });
     if (existingHeader) {
       return res.status(400).json({ message: 'Subject title already exists' });
     }
