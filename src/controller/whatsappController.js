@@ -318,7 +318,7 @@ apicontroller.postHeaderData = async (req, res) => {
   try {
     const { title, header, body, storename } = req.body;
 
-    const validationResults = await validation.performBlankValidations({ title, header });
+    const validationResults = await validation.performBlankValidations({ title });
 
     if (!validationResults.success) {
       return res.status(400).json({ message: validationResults.message });
@@ -384,7 +384,7 @@ apicontroller.updateHeaderData = async (req, res) => {
     const { title, header, body, storename } = req.body;
 
     // Perform validation checks for title and header
-    const validationResults = await validation.performBlankValidations({ title, header });
+    const validationResults = await validation.performBlankValidations({ title });
     if (!validationResults.success) {
       return res.status(400).json({ message: validationResults.message });
     }
