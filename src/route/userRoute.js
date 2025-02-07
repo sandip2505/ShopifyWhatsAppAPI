@@ -4,6 +4,7 @@ const express = require('express');
 const router = express.Router();
 const userController = require('../controller/userController');
 const whatsappController = require('../controller/whatsappController');
+const upsellController = require('../controller/upsellController');
 const rateLimit = require('express-rate-limit');
 const apiKey = process.env.API_KEY;
 
@@ -46,5 +47,12 @@ router.get('/header/:id', checkApiKey, whatsappController.getHeaderDatanById);
 router.put('/header/:id', checkApiKey, whatsappController.updateHeaderData);
 router.delete('/header/:id', checkApiKey, whatsappController.deleteHeaderData);
 router.get('/headers', checkApiKey, whatsappController.HeaderData);
+
+// upsell routes
+
+upsellRoutes.post("/addProduct",upsellController.addProduct);
+upsellRoutes.post("/updateTitle",upsellController.updateTitle);
+upsellRoutes.get("/getProducts",upsellController.getProducts);
+upsellRoutes.post("/deleteProduct", upsellController.deleteProduct);
 
 module.exports = router;
