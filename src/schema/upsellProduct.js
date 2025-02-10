@@ -22,6 +22,7 @@ const upsellSchema = mongoose.Schema({
   },
   title: {
     type: String,
+    default: "Recommend Products",
   },
   buttonLabel: {
     type: String,

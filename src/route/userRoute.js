@@ -50,9 +50,12 @@ router.get('/headers', checkApiKey, whatsappController.HeaderData);
 
 // upsell routes
 
-upsellRoutes.post("/addProduct",upsellController.addProduct);
-upsellRoutes.post("/updateTitle",upsellController.updateTitle);
-upsellRoutes.get("/getProducts",upsellController.getProducts);
-upsellRoutes.post("/deleteProduct", upsellController.deleteProduct);
+
+
+router.post("/addProduct",upsellController.addProduct);
+router.post("/updateTitle",upsellController.updateTitle);
+router.get("/getProducts",upsellController.getProducts);
+router.post("/deleteProduct", upsellController.deleteProduct);
+router.post("/deleteAllProducts", upsellController.deleteAllProducts);
 
 module.exports = router;
