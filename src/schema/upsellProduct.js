@@ -16,6 +16,10 @@ const upsellSchema = mongoose.Schema({
     type: [String],
     required: true
   },
+  upsellLimit: {
+    type: Number,
+    default: 5,
+  },
   autoRecommendUpsell: {
     type: Boolean,
     default: false

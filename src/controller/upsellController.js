@@ -8,6 +8,7 @@ upsellController.addProduct = async (req, res) => {
     autoRecommendUpsell,
     upsellLocation,
     customSelector,
+    upsellLimit,
   } = req.body; // Expecting all relevant fields
 
   console.log("shop_name:newww", shop_name);
@@ -38,7 +39,11 @@ upsellController.addProduct = async (req, res) => {
     if (existingShop) {
       if (autoRecommendUpsell) {
         existingShop.autoRecommendUpsell = autoRecommendUpsell;
-      } else if (upsellLocation) {
+        
+      }else if(upsellLimit){
+        upsellLimit ? (existingShop.upsellLimit = upsellLimit) : null;
+      } 
+      else if (upsellLocation) {
         existingShop.upsellLocation = upsellLocation;
         existingShop.customSelector =
           upsellLocation === "custom" ? customSelector || "" : ""; // Only set customSelector if upsellLocation is "custom"
@@ -62,6 +67,7 @@ upsellController.addProduct = async (req, res) => {
           : products.filter((product) => product), // Only add products if autoRecommendUpsell is disabled
         upsellLocation: upsellLocation || "cart-drawer", // Default location if not provided
         customSelector: upsellLocation === "custom" ? customSelector || "" : "", // Only set customSelector if upsellLocation is "custom"
+        upsellLimit:upsellLimit || 5,
       });
       console.log(":newShop", newShop);
       const response = await newShop.save();
