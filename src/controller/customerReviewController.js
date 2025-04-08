@@ -163,7 +163,7 @@ customerReview.getAllReview = async (req, res) => {
 
 customerReview.getReviewbyProduct = async (req, res) => {
   const { productId, storeName } = req.params;
-console.log(productId, storeName)
+  console.log(productId, storeName)
   try {
     if (!productId || !storeName) {
       return res.status(400).json({ message: "Product ID and storeName are required." });
@@ -329,13 +329,15 @@ customerReview.getStoreReview = async (req, res) => {
       .skip(skip)
       .limit(limit);
     // Count total reviews
-    const totalReviewsCount = await StoreReview.countDocuments(isActive ? { isActive } : {});
+    const totalReviewsCount = await StoreReview.countDocuments(filter);
 
     // Calculate average rating
     const ratingStats = await StoreReview.aggregate([
-      { $match: { deleteAt: null } },
+      { $match:  filter  },
       { $group: { _id: null, averageRating: { $avg: "$rating" } } }
     ]);
+
+    console.log(ratingStats)
     const averageRating = ratingStats.length > 0 ? parseFloat(ratingStats[0].averageRating.toFixed(1)) : 0;
 
     return res.status(200).json({
