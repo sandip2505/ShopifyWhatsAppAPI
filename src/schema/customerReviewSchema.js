@@ -26,6 +26,9 @@ const customerReview = new mongoose.Schema({
     productId: {
         type: String,
     },
+    productTitle: {
+        type: String,
+    },
     isActive: {
         type: Boolean,
         default: true

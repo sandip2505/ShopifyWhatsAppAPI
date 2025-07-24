@@ -151,6 +151,7 @@ stockController.configurationColor = async (req, res) => {
       quantityTextBold: 1,
       popupbtnBackgroundColor: 1,
       popupbtnTextColor: 1,
+      headerIconColor: 1,
     });
 
     // const configurationFields = await configuration.findOne({ shopName }, {
@@ -164,7 +165,7 @@ stockController.configurationColor = async (req, res) => {
 
 stockController.addConfigurationsColor = async (req, res) => {
 
-  console.log(req.body)
+  console.log("addConfigurationsColor", req.body)
   const shopName = req.params.shop;
   try {
     const data = {
@@ -187,6 +188,7 @@ stockController.addConfigurationsColor = async (req, res) => {
       quantityTextBold: req.body.quantityTextBold,
       popupbtnBackgroundColor: req.body.popupbtnBackgroundColor,
       popupbtnTextColor: req.body.popupbtnTextColor,
+      headerIconColor: req.body.headerIconColor,
 
     };
 

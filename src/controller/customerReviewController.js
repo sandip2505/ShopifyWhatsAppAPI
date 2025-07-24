@@ -2,6 +2,9 @@ const customerReview = {};
 
 const Review = require('../schema/customerReviewSchema');
 const StoreReview = require('../schema/storeReviews');
+const RatingConfig = require("../schema/ratingConfig");
+const StoreReviewSetting = require("../schema/storeReviewSetting");
+const ReviewSettings = require("../schema/ReviewSettings");
 
 
 customerReview.addReview = async (req, res) => {
@@ -13,12 +16,13 @@ customerReview.addReview = async (req, res) => {
     reviewText,
     recommend,
     productId,
+    productTitle,
     isActive,
     storeName
   } = req.body;
   console.log(storeName, "storeName")
   try {
-    if (!name || !email || !rating || !reviewText || !productId) {
+    if (!name || !email || !rating || !reviewText || !productId || !productTitle) {
       return res.status(400).json({
         message: "Missing required fields."
       });
@@ -51,6 +55,7 @@ customerReview.addReview = async (req, res) => {
       reviewText,
       recommend: recommend || false,
       productId,
+      productTitle,
       isActive,
       createdAt: new Date()
     });
@@ -333,7 +338,7 @@ customerReview.getStoreReview = async (req, res) => {
 
     // Calculate average rating
     const ratingStats = await StoreReview.aggregate([
-      { $match:  filter  },
+      { $match: filter },
       { $group: { _id: null, averageRating: { $avg: "$rating" } } }
     ]);
 
@@ -397,6 +402,213 @@ customerReview.deleteStoreReview = async (req, res) => {
     return res.status(500).json({ message: "Error deleting review.", error: error.message });
   }
 }
+
+
+customerReview.addRatingConfig = async (req, res) => {
+  try {
+    const { storeName } = req.body;
+
+    if (!storeName || typeof storeName !== 'string' || storeName.trim() === '') {
+      return res.status(400).json({ success: false, message: "storeName is required and must be a non-empty string." });
+    }
+
+    const existing = await RatingConfig.findOne({ storeName: storeName.trim() });
+    if (existing) {
+      return res.status(409).json({ success: false, message: "Configuration for this shop already exists." });
+    }
+    const config = new RatingConfig(req.body);
+    await config.save();
+
+    res.status(201).json({ success: true, data: config });
+  } catch (error) {
+    if (error.code === 11000 && error.keyPattern && error.keyPattern.storeName) {
+      return res.status(409).json({ success: false, message: "Shop name must be unique. This one already exists." });
+    }
+
+    res.status(500).json({ success: false, message: "Server Error: " + error.message });
+  }
+};
+
+
+customerReview.getRatingConfig = async (req, res) => {
+  try {
+    const config = await RatingConfig.findOne({ storeName: req.params.storeName });
+    if (!config) {
+      return res.status(404).json({ success: false, message: "Config not found" });
+    }
+    res.status(200).json({ success: true, data: config });
+  } catch (error) {
+    res.status(500).json({ success: false, message: error.message });
+  }
+};
+
+
+customerReview.updateRatingConfig = async (req, res) => {
+  console.log("called");
+  try {
+    const config = await RatingConfig.findOneAndUpdate(
+      { storeName: req.params.storeName },
+      req.body,
+      { new: true, runValidators: true }
+    );
+
+    if (!config) {
+      return res.status(404).json({ success: false, message: "Config not found" });
+    }
+
+    res.status(200).json({ success: true, data: config });
+  } catch (error) {
+    res.status(400).json({ success: false, message: error.message });
+  }
+};
+
+
+
+customerReview.deleteRatingConfig = async (req, res) => {
+  try {
+    const config = await RatingConfig.findByIdAndDelete(req.params.storeName);
+    if (!config) {
+      return res.status(404).json({ success: false, message: "Config not found" });
+    }
+    res.status(200).json({ success: true, message: "Config deleted successfully" });
+  } catch (error) {
+    res.status(500).json({ success: false, message: error.message });
+  }
+};
+
+customerReview.addStoreReviewSetting = async (req, res) => {
+  try {
+    const { storeName } = req.body;
+
+    if (!storeName || typeof storeName !== 'string' || storeName.trim() === '') {
+      return res.status(400).json({ success: false, message: "storeName is required and must be a non-empty string." });
+    }
+
+    const existing = await StoreReviewSetting.findOne({ storeName: storeName.trim() });
+    if (existing) {
+      return res.status(409).json({ success: false, message: "Store review setting for this shop already exists." });
+    }
+
+    const setting = new StoreReviewSetting(req.body);
+    await setting.save();
+
+    res.status(201).json({ success: true, data: setting });
+  } catch (error) {
+    if (error.code === 11000 && error.keyPattern && error.keyPattern.storeName) {
+      return res.status(409).json({ success: false, message: "Shop name must be unique. This one already exists." });
+    }
+
+    res.status(500).json({ success: false, message: "Server Error: " + error.message });
+  }
+}
+customerReview.getStoreReviewSetting = async (req, res) => {
+  try {
+    console.log(req.params.storeName, "storeName in getStoreReviewSetting");
+    const setting = await StoreReviewSetting.findOne({ storeName: req.params.storeName });
+    if (!setting) {
+      return res.status(404).json({ success: false, message: "Store review setting not found" });
+    }
+    res.status(200).json({ success: true, data: setting });
+  } catch (error) {
+    res.status(500).json({ success: false, message: error.message });
+  }
+}
+
+customerReview.updateStoreReviewSetting = async (req, res) => {
+  console.log(req.body.data, "body in updateStoreReviewSetting");
+  try {
+    const setting = await StoreReviewSetting.findOneAndUpdate(
+      { storeName: req.params.storeName },
+      req.body,
+      { new: true, runValidators: true }
+    );
+    console.log(setting, "setting in updateStoreReviewSetting");
+    if (!setting) {
+      return res.status(404).json({ success: false, message: "Store review setting not found" });
+    }
+
+    res.status(200).json({ success: true, data: setting });
+  } catch (error) {
+    console.log(error);
+    res.status(400).json({ success: false, message: error.message });
+  }
+}
+customerReview.deleteStoreReviewSetting = async (req, res) => {
+  try {
+    const setting = await StoreReviewSetting.findByIdAndDelete(req.params.storeName);
+    if (!setting) {
+      return res.status(404).json({ success: false, message: "Store review setting not found" });
+    }
+    res.status(200).json({ success: true, message: "Store review setting deleted successfully" });
+  } catch (error) {
+    res.status(500).json({ success: false, message: error.message });
+  }
+}
+
+customerReview.addReviewSettings = async (req, res) => {
+  try {
+    const { storeName } = req.body;
+
+    if (!storeName || typeof storeName !== 'string' || storeName.trim() === '') {
+      return res.status(400).json({ success: false, message: "storeName is required and must be a non-empty string." });
+    }
+
+    const existing = await ReviewSettings.findOne({ storeName: storeName.trim() });
+    if (existing) {
+      return res.status(409).json({ success: false, message: "Review settings for this shop already exists." });
+    }
+
+    const settings = new ReviewSettings(req.body);
+    await settings.save();
+
+    res.status(201).json({ success: true, data: settings });
+  } catch (error) {
+    if (error.code === 11000 && error.keyPattern && error.keyPattern.storeName) {
+      return res.status(409).json({ success: false, message: "Shop name must be unique. This one already exists." });
+    }
+
+    res.status(500).json({ success: false, message: "Server Error: " + error.message });
+  }
+}
+customerReview.getReviewSettings = async (req, res) => {
+  try {
+    const settings = await ReviewSettings.findOne({ storeName: req.params.storeName });
+    if (!settings) {
+      return res.status(404).json({ success: false, message: "Review settings not found" });
+    }
+    res.status(200).json({ success: true, data: settings });
+  } catch (error) {
+    res.status(500).json({ success: false, message: error.message });
+  }
+}
+customerReview.updateReviewSettings = async (req, res) => {
+  try {
+    const settings = await ReviewSettings.findOneAndUpdate(
+      { storeName: req.params.storeName },
+      req.body,
+      { new: true, runValidators: true }
+    );
+    if (!settings) {  
+      return res.status(404).json({ success: false, message: "Review settings not found" });
+    }
+    res.status(200).json({ success: true, data: settings });
+  } catch (error) {
+    res.status(400).json({ success: false, message: error.message });
+  }
+}
+customerReview.deleteReviewSettings = async (req, res) => { 
+  try {
+    const settings = await ReviewSettings.findByIdAndDelete(req.params.storeName);
+    if (!settings) {
+      return res.status(404).json({ success: false, message: "Review settings not found" });
+    }
+    res.status(200).json({ success: true, message: "Review settings deleted successfully" });
+  } catch (error) {
+    res.status(500).json({ success: false, message: error.message });
+  }
+}
+
+
 
 
 

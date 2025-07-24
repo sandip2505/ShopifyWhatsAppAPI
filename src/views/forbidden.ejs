@@ -1,0 +1,232 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>403 - Forbidden</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Arial', sans-serif;
+            background: linear-gradient(135deg, #0c0c0c 0%, #1a1a1a 50%, #0f0f0f 100%);
+            color: #ffffff;
+            height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            overflow: hidden;
+            position: relative;
+        }
+
+        .background-pattern {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            opacity: 0.1;
+            background-image: 
+                radial-gradient(circle at 25% 25%, #ff0000 0%, transparent 50%),
+                radial-gradient(circle at 75% 75%, #ff4444 0%, transparent 50%);
+            animation: pulse 4s ease-in-out infinite alternate;
+        }
+
+        @keyframes pulse {
+            0% { opacity: 0.05; }
+            100% { opacity: 0.15; }
+        }
+
+        .container {
+            text-align: center;
+            z-index: 2;
+            max-width: 600px;
+            padding: 40px;
+        }
+
+        .error-code {
+            font-size: 8rem;
+            font-weight: 900;
+            color: #ff3333;
+            text-shadow: 0 0 20px rgba(255, 51, 51, 0.5);
+            margin-bottom: 20px;
+            animation: glow 2s ease-in-out infinite alternate;
+            letter-spacing: -5px;
+        }
+
+        @keyframes glow {
+            from { text-shadow: 0 0 20px rgba(255, 51, 51, 0.5), 0 0 30px rgba(255, 51, 51, 0.3); }
+            to { text-shadow: 0 0 30px rgba(255, 51, 51, 0.8), 0 0 40px rgba(255, 51, 51, 0.4); }
+        }
+
+        .title {
+            font-size: 3rem;
+            font-weight: 700;
+            margin-bottom: 20px;
+            color: #ffffff;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+        }
+
+        .subtitle {
+            font-size: 1.2rem;
+            color: #cccccc;
+            margin-bottom: 30px;
+            line-height: 1.6;
+        }
+
+        .description {
+            font-size: 1rem;
+            color: #999999;
+            margin-bottom: 40px;
+            line-height: 1.8;
+        }
+
+        .lock-icon {
+            font-size: 4rem;
+            color: #ff3333;
+            margin-bottom: 30px;
+            animation: shake 0.5s ease-in-out;
+        }
+
+        @keyframes shake {
+            0%, 100% { transform: translateX(0); }
+            25% { transform: translateX(-5px); }
+            75% { transform: translateX(5px); }
+        }
+
+        .button {
+            display: inline-block;
+            padding: 12px 30px;
+            background: linear-gradient(45deg, #ff3333, #ff6666);
+            color: white;
+            text-decoration: none;
+            border-radius: 30px;
+            font-weight: 600;
+            transition: all 0.3s ease;
+            border: 2px solid transparent;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            cursor: pointer;
+        }
+
+        .button:hover {
+            background: linear-gradient(45deg, #ff6666, #ff3333);
+            transform: translateY(-2px);
+            box-shadow: 0 10px 20px rgba(255, 51, 51, 0.3);
+            border-color: #ff3333;
+        }
+
+        .particles {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            overflow: hidden;
+        }
+
+        .particle {
+            position: absolute;
+            width: 2px;
+            height: 2px;
+            background: #ff3333;
+            border-radius: 50%;
+            animation: float 6s linear infinite;
+        }
+
+        @keyframes float {
+            0% {
+                transform: translateY(100vh) rotate(0deg);
+                opacity: 0;
+            }
+            10% {
+                opacity: 1;
+            }
+            90% {
+                opacity: 1;
+            }
+            100% {
+                transform: translateY(-100vh) rotate(360deg);
+                opacity: 0;
+            }
+        }
+
+        .warning-bar {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 4px;
+            background: linear-gradient(90deg, #ff3333, #ff6666, #ff3333);
+            animation: warning-pulse 2s ease-in-out infinite;
+        }
+
+        @keyframes warning-pulse {
+            0%, 100% { opacity: 0.8; }
+            50% { opacity: 1; }
+        }
+
+        @media (max-width: 768px) {
+            .error-code {
+                font-size: 6rem;
+            }
+            .title {
+                font-size: 2rem;
+            }
+            .subtitle {
+                font-size: 1rem;
+            }
+            .container {
+                padding: 20px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="warning-bar"></div>
+    <div class="background-pattern"></div>
+    <div class="particles"></div>
+    
+    <div class="container">
+        <div class="lock-icon">🔒</div>
+        <div class="error-code">403</div>
+        <h1 class="title">Forbidden</h1>
+        <p class="subtitle">Access Denied</p>
+        <p class="description">
+            You don't have permission to access this resource on this server. 
+            The request was valid, but the server is refusing to fulfill it.
+        </p>
+        <a href="/" class="button">Go Home</a>
+    </div>
+
+    <script>
+        // Create floating particles
+        function createParticles() {
+            const particlesContainer = document.querySelector('.particles');
+            const particleCount = 50;
+
+            for (let i = 0; i < particleCount; i++) {
+                const particle = document.createElement('div');
+                particle.className = 'particle';
+                particle.style.left = Math.random() * 100 + '%';
+                particle.style.animationDelay = Math.random() * 6 + 's';
+                particle.style.animationDuration = (Math.random() * 4 + 4) + 's';
+                particlesContainer.appendChild(particle);
+            }
+        }
+
+        // Add hover effect to error code
+        const errorCode = document.querySelector('.error-code');
+        errorCode.addEventListener('mouseenter', () => {
+            errorCode.style.transform = 'scale(1.1)';
+        });
+        errorCode.addEventListener('mouseleave', () => {
+            errorCode.style.transform = 'scale(1)';
+        });
+
+        // Initialize particles
+        createParticles();
+    </script>
+</body>
+</html>

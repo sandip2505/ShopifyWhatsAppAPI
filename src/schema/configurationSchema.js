@@ -126,6 +126,10 @@ const configurationSchema = new mongoose.Schema({
         type: String,
         default: "#075efc",
     },
+    headerIconColor: {
+        type: String,
+        default: "#c13121",
+    },
     stockStatusTextBold: {
         type: Boolean,
         default: false,

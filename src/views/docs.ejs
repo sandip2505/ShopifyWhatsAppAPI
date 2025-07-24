@@ -1,0 +1,1129 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>API Documentation</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: #0f172a;
+            color: #e2e8f0;
+            line-height: 1.6;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 2rem;
+        }
+
+        .header {
+            text-align: center;
+            margin-bottom: 3rem;
+            padding: 2rem 0;
+            background: linear-gradient(135deg, #1e293b 0%, #334155 100%);
+            border-radius: 12px;
+            border: 1px solid rgba(59, 130, 246, 0.2);
+        }
+
+        .header h1 {
+            font-size: 3rem;
+            background: linear-gradient(45deg, #3b82f6, #8b5cf6);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            margin-bottom: 1rem;
+        }
+
+        .header p {
+            font-size: 1.2rem;
+            color: #94a3b8;
+            max-width: 600px;
+            margin: 0 auto;
+        }
+
+        .nav {
+            position: sticky;
+            top: 0;
+            background: rgba(15, 23, 42, 0.95);
+            padding: 1rem 0;
+            margin-bottom: 2rem;
+            border-radius: 8px;
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(59, 130, 246, 0.1);
+            z-index: 100;
+        }
+
+        .nav ul {
+            list-style: none;
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            gap: 1rem;
+        }
+
+        .nav a {
+            color: #94a3b8;
+            text-decoration: none;
+            padding: 0.5rem 1rem;
+            border-radius: 6px;
+            transition: all 0.3s ease;
+            font-weight: 500;
+        }
+
+        .nav a:hover {
+            background: rgba(59, 130, 246, 0.1);
+            color: #3b82f6;
+        }
+
+        .section {
+            margin-bottom: 3rem;
+            background: rgba(30, 41, 59, 0.3);
+            border-radius: 12px;
+            padding: 2rem;
+            border: 1px solid rgba(59, 130, 246, 0.2);
+        }
+
+        .section h2 {
+            font-size: 2rem;
+            color: #3b82f6;
+            margin-bottom: 1rem;
+            border-bottom: 2px solid rgba(59, 130, 246, 0.3);
+            padding-bottom: 0.5rem;
+        }
+
+        .endpoint {
+            background: rgba(15, 23, 42, 0.6);
+            border-radius: 8px;
+            padding: 1.5rem;
+            margin-bottom: 1.5rem;
+            border-left: 4px solid #3b82f6;
+            transition: all 0.3s ease;
+        }
+
+        .endpoint:hover {
+            background: rgba(15, 23, 42, 0.8);
+            transform: translateX(5px);
+        }
+
+        .endpoint-header {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            margin-bottom: 1rem;
+            flex-wrap: wrap;
+        }
+
+        .method {
+            padding: 0.3rem 0.8rem;
+            border-radius: 4px;
+            font-weight: bold;
+            font-size: 0.9rem;
+            text-transform: uppercase;
+        }
+
+        .method.get { background: #10b981; color: #000; }
+        .method.post { background: #3b82f6; color: #fff; }
+        .method.put { background: #f59e0b; color: #000; }
+        .method.delete { background: #ef4444; color: #fff; }
+
+        .endpoint-path {
+            font-family: 'Courier New', monospace;
+            background: rgba(59, 130, 246, 0.1);
+            padding: 0.5rem 1rem;
+            border-radius: 4px;
+            color: #60a5fa;
+            flex: 1;
+            min-width: 200px;
+        }
+
+        .endpoint-description {
+            color: #cbd5e1;
+            margin-bottom: 1rem;
+        }
+
+        .auth-required {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            background: rgba(239, 68, 68, 0.1);
+            color: #f87171;
+            padding: 0.3rem 0.8rem;
+            border-radius: 4px;
+            font-size: 0.8rem;
+            margin-top: 0.5rem;
+        }
+
+        .rate-limited {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            background: rgba(245, 158, 11, 0.1);
+            color: #fbbf24;
+            padding: 0.3rem 0.8rem;
+            border-radius: 4px;
+            font-size: 0.8rem;
+            margin-top: 0.5rem;
+            margin-left: 0.5rem;
+        }
+
+        .code-block {
+            background: #1e293b;
+            border: 1px solid rgba(59, 130, 246, 0.2);
+            border-radius: 6px;
+            padding: 1rem;
+            margin: 1rem 0;
+            overflow-x: auto;
+            font-family: 'Courier New', monospace;
+            font-size: 0.9rem;
+        }
+
+        .code-block pre {
+            margin: 0;
+            white-space: pre-wrap;
+        }
+
+        .parameters {
+            margin-top: 1rem;
+        }
+
+        .parameters h4 {
+            color: #8b5cf6;
+            margin-bottom: 0.5rem;
+        }
+
+        .param {
+            background: rgba(139, 92, 246, 0.1);
+            border-radius: 4px;
+            padding: 0.5rem;
+            margin-bottom: 0.5rem;
+            border-left: 3px solid #8b5cf6;
+        }
+
+        .param-name {
+            color: #a78bfa;
+            font-weight: bold;
+        }
+
+        .param-type {
+            color: #10b981;
+            font-size: 0.8rem;
+            margin-left: 0.5rem;
+        }
+
+        .auth-info {
+            background: rgba(239, 68, 68, 0.1);
+            border: 1px solid rgba(239, 68, 68, 0.3);
+            border-radius: 8px;
+            padding: 1rem;
+            margin-bottom: 2rem;
+        }
+
+        .auth-info h3 {
+            color: #f87171;
+            margin-bottom: 0.5rem;
+        }
+
+        .rate-limit-info {
+            background: rgba(245, 158, 11, 0.1);
+            border: 1px solid rgba(245, 158, 11, 0.3);
+            border-radius: 8px;
+            padding: 1rem;
+            margin-bottom: 2rem;
+        }
+
+        .rate-limit-info h3 {
+            color: #fbbf24;
+            margin-bottom: 0.5rem;
+        }
+
+        .search-box {
+            margin-bottom: 2rem;
+            position: relative;
+        }
+
+        .search-box input {
+            width: 100%;
+            padding: 1rem;
+            background: rgba(30, 41, 59, 0.8);
+            border: 1px solid rgba(59, 130, 246, 0.3);
+            border-radius: 8px;
+            color: #e2e8f0;
+            font-size: 1rem;
+        }
+
+        .search-box input::placeholder {
+            color: #64748b;
+        }
+
+        .search-box input:focus {
+            outline: none;
+            border-color: #3b82f6;
+            box-shadow: 0 0 0 2px rgba(59, 130, 246, 0.1);
+        }
+
+        @media (max-width: 768px) {
+            .container {
+                padding: 1rem;
+            }
+
+            .header h1 {
+                font-size: 2rem;
+            }
+
+            .nav ul {
+                flex-direction: column;
+                align-items: center;
+            }
+
+            .endpoint-header {
+                flex-direction: column;
+                align-items: flex-start;
+            }
+
+            .endpoint-path {
+                min-width: 100%;
+            }
+        }
+
+        .hidden {
+            display: none;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>API Documentation</h1>
+            <p>Complete reference for all available API endpoints with authentication and rate limiting information.</p>
+        </div>
+
+        <div class="search-box">
+            <input type="text" id="searchInput" placeholder="Search endpoints..." />
+        </div>
+
+        <nav class="nav">
+            <ul>
+                <li><a href="#auth">Authentication</a></li>
+                <li><a href="#user">User Management</a></li>
+                <li><a href="#whatsapp">WhatsApp</a></li>
+                <li><a href="#upsell">Upsell Products</a></li>
+                <li><a href="#reviews">Customer Reviews</a></li>
+                <li><a href="#stock">Stock Configuration</a></li>
+                <li><a href="#icemajesty">Ice Majesty</a></li>
+            </ul>
+        </nav>
+
+        <div class="auth-info">
+            <h3>🔐 Authentication Required</h3>
+            <p>Most endpoints require API key authentication. Include your API key in the request headers:</p>
+            <div class="code-block">
+                <pre>x-api-key: YOUR_API_KEY</pre>
+            </div>
+        </div>
+
+        <div class="rate-limit-info">
+            <h3>⏱️ Rate Limiting</h3>
+            <p>API requests are limited to 100 requests per 15 minutes per IP address. Rate-limited endpoints are marked below.</p>
+        </div>
+
+        <section id="user" class="section">
+            <h2>User Management</h2>
+            
+            <div class="endpoint">
+                <div class="endpoint-header">
+                    <span class="method get">GET</span>
+                    <span class="endpoint-path">/api/shopifyUser</span>
+                </div>
+                <div class="endpoint-description">Retrieve Shopify user information</div>
+                <div class="code-block">
+                    <pre>curl -X GET "https://api.example.com/api/shopifyUser"</pre>
+                </div>
+            </div>
+
+            <div class="endpoint">
+                <div class="endpoint-header">
+                    <span class="method post">POST</span>
+                    <span class="endpoint-path">/api/shopifyUser</span>
+                </div>
+                <div class="endpoint-description">Create or update Shopify user</div>
+                <div class="code-block">
+                    <pre>curl -X POST "https://api.example.com/api/shopifyUser" \
+  -H "Content-Type: application/json" \
+  -d '{"username": "example", "email": "user@example.com"}'</pre>
+                </div>
+            </div>
+        </section>
+
+        <section id="whatsapp" class="section">
+            <h2>WhatsApp Integration</h2>
+            
+            <div class="endpoint">
+                <div class="endpoint-header">
+                    <span class="method get">GET</span>
+                    <span class="endpoint-path">/api/mobile</span>
+                </div>
+                <div class="endpoint-description">Get country codes for mobile numbers</div>
+            </div>
+
+            <div class="endpoint">
+                <div class="endpoint-header">
+                    <span class="method post">POST</span>
+                    <span class="endpoint-path">/api/whatsApp</span>
+                </div>
+                <div class="endpoint-description">Send WhatsApp data</div>
+                <div class="auth-required">🔐 Auth Required</div>
+                <div class="rate-limited">⏱️ Rate Limited</div>
+                <div class="code-block">
+                    <pre>curl -X POST "https://api.example.com/api/whatsApp" \
+  -H "x-api-key: YOUR_API_KEY" \
+  -H "Content-Type: application/json" \
+  -d '{"message": "Hello", "phone": "+1234567890"}'</pre>
+                </div>
+            </div>
+
+            <div class="endpoint">
+                <div class="endpoint-header">
+                    <span class="method get">GET</span>
+                    <span class="endpoint-path">/api/whatsApp</span>
+                </div>
+                <div class="endpoint-description">Retrieve WhatsApp data</div>
+                <div class="auth-required">🔐 Auth Required</div>
+                <div class="rate-limited">⏱️ Rate Limited</div>
+            </div>
+
+            <div class="endpoint">
+                <div class="endpoint-header">
+                    <span class="method get">GET</span>
+                    <span class="endpoint-path">/api/whatsAppData</span>
+                </div>
+                <div class="endpoint-description">Get all WhatsApp data</div>
+            </div>
+
+            <div class="endpoint">
+                <div class="endpoint-header">
+                    <span class="method get">GET</span>
+                    <span class="endpoint-path">/api/editWhatsApp/{id}</span>
+                </div>
+                <div class="endpoint-description">Get specific WhatsApp data by ID</div>
+                <div class="auth-required">🔐 Auth Required</div>
+                <div class="parameters">
+                    <h4>Path Parameters:</h4>
+                    <div class="param">
+                        <span class="param-name">id</span>
+                        <span class="param-type">string</span>
+                        - WhatsApp data ID
+                    </div>
+                </div>
+            </div>
+
+            <div class="endpoint">
+                <div class="endpoint-header">
+                    <span class="method put">PUT</span>
+                    <span class="endpoint-path">/api/updateWhatsApp/{id}</span>
+                </div>
+                <div class="endpoint-description">Update WhatsApp data</div>
+                <div class="auth-required">🔐 Auth Required</div>
+                <div class="parameters">
+                    <h4>Path Parameters:</h4>
+                    <div class="param">
+                        <span class="param-name">id</span>
+                        <span class="param-type">string</span>
+                        - WhatsApp data ID
+                    </div>
+                </div>
+            </div>
+
+            <div class="endpoint">
+                <div class="endpoint-header">
+                    <span class="method delete">DELETE</span>
+                    <span class="endpoint-path">/api/deleteWhatsApp/{id}</span>
+                </div>
+                <div class="endpoint-description">Delete WhatsApp data</div>
+                <div class="auth-required">🔐 Auth Required</div>
+                <div class="parameters">
+                    <h4>Path Parameters:</h4>
+                    <div class="param">
+                        <span class="param-name">id</span>
+                        <span class="param-type">string</span>
+                        - WhatsApp data ID
+                    </div>
+                </div>
+            </div>
+
+            <div class="endpoint">
+                <div class="endpoint-header">
+                    <span class="method get">GET</span>
+                    <span class="endpoint-path">/api/version</span>
+                </div>
+                <div class="endpoint-description">Get API version information</div>
+            </div>
+
+            <h3 style="color: #8b5cf6; margin: 2rem 0 1rem 0;">Header Management</h3>
+
+            <div class="endpoint">
+                <div class="endpoint-header">
+                    <span class="method post">POST</span>
+                    <span class="endpoint-path">/api/header</span>
+                </div>
+                <div class="endpoint-description">Create header data</div>
+                <div class="auth-required">🔐 Auth Required</div>
+            </div>
+
+            <div class="endpoint">
+                <div class="endpoint-header">
+                    <span class="method get">GET</span>
+                    <span class="endpoint-path">/api/header</span>
+                </div>
+                <div class="endpoint-description">Get header data</div>
+                <div class="auth-required">🔐 Auth Required</div>
+            </div>
+
+            <div class="endpoint">
+                <div class="endpoint-header">
+                    <span class="method get">GET</span>
+                    <span class="endpoint-path">/api/header/{id}</span>
+                </div>
+                <div class="endpoint-description">Get specific header data by ID</div>
+                <div class="auth-required">🔐 Auth Required</div>
+            </div>
+
+            <div class="endpoint">
+                <div class="endpoint-header">
+                    <span class="method put">PUT</span>
+                    <span class="endpoint-path">/api/header/{id}</span>
+                </div>
+                <div class="endpoint-description">Update header data</div>
+                <div class="auth-required">🔐 Auth Required</div>
+            </div>
+
+            <div class="endpoint">
+                <div class="endpoint-header">
+                    <span class="method delete">DELETE</span>
+                    <span class="endpoint-path">/api/header/{id}</span>
+                </div>
+                <div class="endpoint-description">Delete header data</div>
+                <div class="auth-required">🔐 Auth Required</div>
+            </div>
+
+            <div class="endpoint">
+                <div class="endpoint-header">
+                    <span class="method get">GET</span>
+                    <span class="endpoint-path">/api/headers</span>
+                </div>
+                <div class="endpoint-description">Get all headers data</div>
+                <div class="auth-required">🔐 Auth Required</div>
+            </div>
+        </section>
+
+        <section id="upsell" class="section">
+            <h2>Upsell Products</h2>
+            
+            <div class="endpoint">
+                <div class="endpoint-header">
+                    <span class="method post">POST</span>
+                    <span class="endpoint-path">/api/addProduct</span>
+                </div>
+                <div class="endpoint-description">Add a new upsell product</div>
+                <div class="code-block">
+                    <pre>curl -X POST "https://api.example.com/api/addProduct" \
+  -H "Content-Type: application/json" \
+  -d '{"name": "Product Name", "price": 29.99, "description": "Product description"}'</pre>
+                </div>
+            </div>
+
+            <div class="endpoint">
+                <div class="endpoint-header">
+                    <span class="method post">POST</span>
+                    <span class="endpoint-path">/api/updateTitle</span>
+                </div>
+                <div class="endpoint-description">Update product title</div>
+            </div>
+
+            <div class="endpoint">
+                <div class="endpoint-header">
+                    <span class="method get">GET</span>
+                    <span class="endpoint-path">/api/getProducts</span>
+                </div>
+                <div class="endpoint-description">Get all upsell products</div>
+            </div>
+
+            <div class="endpoint">
+                <div class="endpoint-header">
+                    <span class="method post">POST</span>
+                    <span class="endpoint-path">/api/deleteProduct</span>
+                </div>
+                <div class="endpoint-description">Delete a specific product</div>
+            </div>
+
+            <div class="endpoint">
+                <div class="endpoint-header">
+                    <span class="method post">POST</span>
+                    <span class="endpoint-path">/api/deleteAllProducts</span>
+                </div>
+                <div class="endpoint-description">Delete all upsell products</div>
+            </div>
+        </section>
+
+        <section id="reviews" class="section">
+            <h2>Customer Reviews</h2>
+            
+            <div class="endpoint">
+                <div class="endpoint-header">
+                    <span class="method post">POST</span>
+                    <span class="endpoint-path">/api/addReview</span>
+                </div>
+                <div class="endpoint-description">Add a new customer review</div>
+                <div class="code-block">
+                    <pre>curl -X POST "https://api.example.com/api/addReview" \
+  -H "Content-Type: application/json" \
+  -d '{"rating": 5, "comment": "Great product!", "customerName": "John Doe"}'</pre>
+                </div>
+            </div>
+
+            <div class="endpoint">
+                <div class="endpoint-header">
+                    <span class="method get">GET</span>
+                    <span class="endpoint-path">/api/getallReview/{storeName}</span>
+                </div>
+                <div class="endpoint-description">Get all reviews for a specific store</div>
+                <div class="parameters">
+                    <h4>Path Parameters:</h4>
+                    <div class="param">
+                        <span class="param-name">storeName</span>
+                        <span class="param-type">string</span>
+                        - Name of the store
+                    </div>
+                </div>
+            </div>
+
+            <div class="endpoint">
+                <div class="endpoint-header">
+                    <span class="method get">GET</span>
+                    <span class="endpoint-path">/api/getReview/{storeName}/{productId}</span>
+                </div>
+                <div class="endpoint-description">Get reviews for a specific product</div>
+                <div class="parameters">
+                    <h4>Path Parameters:</h4>
+                    <div class="param">
+                        <span class="param-name">storeName</span>
+                        <span class="param-type">string</span>
+                        - Name of the store
+                    </div>
+                    <div class="param">
+                        <span class="param-name">productId</span>
+                        <span class="param-type">string</span>
+                        - Product ID
+                    </div>
+                </div>
+            </div>
+
+            <div class="endpoint">
+                <div class="endpoint-header">
+                    <span class="method delete">DELETE</span>
+                    <span class="endpoint-path">/api/deleteReview/{id}</span>
+                </div>
+                <div class="endpoint-description">Delete a specific review</div>
+                <div class="parameters">
+                    <h4>Path Parameters:</h4>
+                    <div class="param">
+                        <span class="param-name">id</span>
+                        <span class="param-type">string</span>
+                        - Review ID
+                    </div>
+                </div>
+            </div>
+
+            <div class="endpoint">
+                <div class="endpoint-header">
+                    <span class="method get">GET</span>
+                    <span class="endpoint-path">/api/activeReview</span>
+                </div>
+                <div class="endpoint-description">Get all active reviews</div>
+            </div>
+
+            <div class="endpoint">
+                <div class="endpoint-header">
+                    <span class="method put">PUT</span>
+                    <span class="endpoint-path">/api/updateReview/{id}</span>
+                </div>
+                <div class="endpoint-description">Update a specific review</div>
+                <div class="parameters">
+                    <h4>Path Parameters:</h4>
+                    <div class="param">
+                        <span class="param-name">id</span>
+                        <span class="param-type">string</span>
+                        - Review ID
+                    </div>
+                </div>
+            </div>
+
+            <div class="endpoint">
+                <div class="endpoint-header">
+                    <span class="method post">POST</span>
+                    <span class="endpoint-path">/api/storeReview</span>
+                </div>
+                <div class="endpoint-description">Add store review with image uploads (max 5 images)</div>
+                <div class="parameters">
+                    <h4>Form Data:</h4>
+                    <div class="param">
+                        <span class="param-name">reviewImages</span>
+                        <span class="param-type">file[]</span>
+                        - Review images (max 5)
+                    </div>
+                </div>
+            </div>
+
+            <div class="endpoint">
+                <div class="endpoint-header">
+                    <span class="method get">GET</span>
+                    <span class="endpoint-path">/api/storeReview/{storeName}</span>
+                </div>
+                <div class="endpoint-description">Get store reviews</div>
+                <div class="parameters">
+                    <h4>Path Parameters:</h4>
+                    <div class="param">
+                        <span class="param-name">storeName</span>
+                        <span class="param-type">string</span>
+                        - Name of the store
+                    </div>
+                </div>
+            </div>
+
+            <div class="endpoint">
+                <div class="endpoint-header">
+                    <span class="method put">PUT</span>
+                    <span class="endpoint-path">/api/storeReview/{id}</span>
+                </div>
+                <div class="endpoint-description">Update store review</div>
+                <div class="parameters">
+                    <h4>Path Parameters:</h4>
+                    <div class="param">
+                        <span class="param-name">id</span>
+                        <span class="param-type">string</span>
+                        - Store review ID
+                    </div>
+                </div>
+            </div>
+
+            <div class="endpoint">
+                <div class="endpoint-header">
+                    <span class="method delete">DELETE</span>
+                    <span class="endpoint-path">/api/storeReview/{id}</span>
+                </div>
+                <div class="endpoint-description">Delete store review</div>
+                <div class="parameters">
+                    <h4>Path Parameters:</h4>
+                    <div class="param">
+                        <span class="param-name">id</span>
+                        <span class="param-type">string</span>
+                        - Store review ID
+                    </div>
+                </div>
+            </div>
+
+            <h3 style="color: #8b5cf6; margin: 2rem 0 1rem 0;">Rating Configuration</h3>
+
+            <div class="endpoint">
+                <div class="endpoint-header">
+                    <span class="method post">POST</span>
+                    <span class="endpoint-path">/api/ratingConfig</span>
+                </div>
+                <div class="endpoint-description">Add rating configuration</div>
+                <div class="auth-required">🔐 Auth Required</div>
+            </div>
+
+            <div class="endpoint">
+                <div class="endpoint-header">
+                    <span class="method get">GET</span>
+                    <span class="endpoint-path">/api/ratingConfig/{storeName}</span>
+                </div>
+                <div class="endpoint-description">Get rating configuration for store</div>
+                <div class="auth-required">🔐 Auth Required</div>
+            </div>
+
+            <div class="endpoint">
+                <div class="endpoint-header">
+                    <span class="method put">PUT</span>
+                    <span class="endpoint-path">/api/ratingConfig/{id}</span>
+                </div>
+                <div class="endpoint-description">Update rating configuration</div>
+                <div class="auth-required">🔐 Auth Required</div>
+            </div>
+
+            <div class="endpoint">
+                <div class="endpoint-header">
+                    <span class="method delete">DELETE</span>
+                    <span class="endpoint-path">/api/ratingConfig/{id}</span>
+                </div>
+                <div class="endpoint-description">Delete rating configuration</div>
+                <div class="auth-required">🔐 Auth Required</div>
+            </div>
+        </section>
+
+        <section id="stock" class="section">
+            <h2>Stock Configuration</h2>
+            
+            <div class="endpoint">
+                <div class="endpoint-header">
+                    <span class="method post">POST</span>
+                    <span class="endpoint-path">/api/configuration</span>
+                </div>
+                <div class="endpoint-description">Add stock configuration</div>
+            </div>
+
+            <div class="endpoint">
+                <div class="endpoint-header">
+                    <span class="method get">GET</span>
+                    <span class="endpoint-path">/api/configuration/{shop}</span>
+                </div>
+                <div class="endpoint-description">Get configuration for specific shop</div>
+                <div class="parameters">
+                    <h4>Path Parameters:</h4>
+                    <div class="param">
+                        <span class="param-name">shop</span>
+                        <span class="param-type">string</span>
+                        - Shop identifier
+                    </div>
+                </div>
+            </div>
+
+            <div class="endpoint">
+                <div class="endpoint-header">
+                    <span class="method get">GET</span>
+                    <span class="endpoint-path">/api/configurationFields/{shop}</span>
+                </div>
+                <div class="endpoint-description">Get configuration fields for shop</div>
+                <div class="parameters">
+                    <h4>Path Parameters:</h4>
+                    <div class="param">
+                        <span class="param-name">shop</span>
+                        <span class="param-type">string</span>
+                        - Shop identifier
+                    </div>
+                </div>
+            </div>
+
+            <div class="endpoint">
+                <div class="endpoint-header">
+                    <span class="method post">POST</span>
+                    <span class="endpoint-path">/api/addConfigurationsFields/{shop}</span>
+                </div>
+                <div class="endpoint-description">Update configuration fields for shop</div>
+                <div class="parameters">
+                    <h4>Path Parameters:</h4>
+                    <div class="param">
+                        <span class="param-name">shop</span>
+                        <span class="param-type">string</span>
+                        - Shop identifier
+                    </div>
+                </div>
+            </div>
+
+            <div class="endpoint">
+                <div class="endpoint-header">
+                    <span class="method get">GET</span>
+                    <span class="endpoint-path">/api/configurationColor/{shop}</span>
+                </div>
+                <div class="endpoint-description">Get configuration colors for shop</div>
+                <div class="parameters">
+                    <h4>Path Parameters:</h4>
+                    <div class="param">
+                        <span class="param-name">shop</span>
+                        <span class="param-type">string</span>
+                        - Shop identifier
+                    </div>
+                </div>
+            </div>
+
+            <div class="endpoint">
+                <div class="endpoint-header">
+                    <span class="method post">POST</span>
+                    <span class="endpoint-path">/api/addConfigurationsColor/{shop}</span>
+                </div>
+                <div class="endpoint-description">Add configuration colors for shop</div>
+                <div class="parameters">
+                    <h4>Path Parameters:</h4>
+                    <div class="param">
+                        <span class="param-name">shop</span>
+                        <span class="param-type">string</span>
+                        - Shop identifier
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section id="icemajesty" class="section">
+            <h2>Ice Majesty</h2>
+            
+            <div class="endpoint">
+                <div class="endpoint-header">
+                    <span class="method get">GET</span>
+                    <span class="endpoint-path">/api/ice-majesty/showConfig/{shop}</span>
+                </div>
+                <div class="endpoint-description">Show Ice Majesty configuration for shop</div>
+                <div class="parameters">
+                    <h4>Path Parameters:</h4>
+                    <div class="param">
+                        <span class="param-name">shop</span>
+                        <span class="param-type">string</span>
+                        - Shop identifier
+                    </div>
+                </div>
+            </div>
+
+            <div class="endpoint">
+                <div class="endpoint-header">
+                    <span class="method post">POST</span>
+                    <span class="endpoint-path">/api/ice-majesty/addConfig</span>
+                </div>
+                <div class="endpoint-description">Add Ice Majesty configuration with custom image upload</div>
+                <div class="parameters">
+                    <h4>Form Data:</h4>
+                    <div class="param">
+                        <span class="param-name">customImage</span>
+                        <span class="param-type">file</span>
+                        - Custom image file
+                    </div>
+                </div>
+                <div class="code-block">
+                    <pre>curl -X POST "https://api.example.com/api/ice-majesty/addConfig" \
+  -H "Content-Type: multipart/form-data" \
+  -F "customImage=@/path/to/image.jpg" \
+  -F "config='{\"setting\": \"value\"}';"</pre>
+                </div>
+            </div>
+        </section>
+
+        <section id="misc" class="section">
+            <h2>Miscellaneous</h2>
+            
+            <div class="endpoint">
+                <div class="endpoint-header">
+                    <span class="method get">GET</span>
+                    <span class="endpoint-path">/api/docs</span>
+                </div>
+                <div class="endpoint-description">Access this API documentation page</div>
+            </div>
+        </section>
+
+        <div class="section">
+            <h2>Response Format</h2>
+            <p>All API responses follow a consistent JSON format:</p>
+            <div class="code-block">
+                <pre>{
+  "success": true,
+  "data": {
+    // Response data here
+  },
+  "message": "Success message",
+  "timestamp": "2024-01-15T10:30:00Z"
+}</pre>
+            </div>
+            
+            <h3 style="color: #8b5cf6; margin: 2rem 0 1rem 0;">Error Response Format</h3>
+            <div class="code-block">
+                <pre>{
+  "success": false,
+  "error": {
+    "code": "ERROR_CODE",
+    "message": "Error description"
+  },
+  "timestamp": "2024-01-15T10:30:00Z"
+}</pre>
+            </div>
+        </div>
+
+        <div class="section">
+            <h2>Status Codes</h2>
+            <div class="endpoint">
+                <div class="endpoint-header">
+                    <span class="method get" style="background: #10b981;">200</span>
+                    <span class="endpoint-path">OK</span>
+                </div>
+                <div class="endpoint-description">Request successful</div>
+            </div>
+            
+            <div class="endpoint">
+                <div class="endpoint-header">
+                    <span class="method post" style="background: #10b981;">201</span>
+                    <span class="endpoint-path">Created</span>
+                </div>
+                <div class="endpoint-description">Resource created successfully</div>
+            </div>
+            
+            <div class="endpoint">
+                <div class="endpoint-header">
+                    <span class="method delete" style="background: #f59e0b;">400</span>
+                    <span class="endpoint-path">Bad Request</span>
+                </div>
+                <div class="endpoint-description">Invalid request parameters</div>
+            </div>
+            
+            <div class="endpoint">
+                <div class="endpoint-header">
+                    <span class="method delete" style="background: #ef4444;">401</span>
+                    <span class="endpoint-path">Unauthorized</span>
+                </div>
+                <div class="endpoint-description">Invalid or missing API key</div>
+            </div>
+            
+            <div class="endpoint">
+                <div class="endpoint-header">
+                    <span class="method delete" style="background: #ef4444;">403</span>
+                    <span class="endpoint-path">Forbidden</span>
+                </div>
+                <div class="endpoint-description">Access denied</div>
+            </div>
+            
+            <div class="endpoint">
+                <div class="endpoint-header">
+                    <span class="method delete" style="background: #ef4444;">404</span>
+                    <span class="endpoint-path">Not Found</span>
+                </div>
+                <div class="endpoint-description">Resource not found</div>
+            </div>
+            
+            <div class="endpoint">
+                <div class="endpoint-header">
+                    <span class="method delete" style="background: #ef4444;">429</span>
+                    <span class="endpoint-path">Too Many Requests</span>
+                </div>
+                <div class="endpoint-description">Rate limit exceeded</div>
+            </div>
+            
+            <div class="endpoint">
+                <div class="endpoint-header">
+                    <span class="method delete" style="background: #ef4444;">500</span>
+                    <span class="endpoint-path">Internal Server Error</span>
+                </div>
+                <div class="endpoint-description">Server error occurred</div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Search functionality
+        const searchInput = document.getElementById('searchInput');
+        const sections = document.querySelectorAll('.section');
+        const endpoints = document.querySelectorAll('.endpoint');
+
+        searchInput.addEventListener('input', function() {
+            const searchTerm = this.value.toLowerCase();
+            
+            if (searchTerm === '') {
+                // Show all sections and endpoints
+                sections.forEach(section => {
+                    section.classList.remove('hidden');
+                    const sectionEndpoints = section.querySelectorAll('.endpoint');
+                    sectionEndpoints.forEach(endpoint => {
+                        endpoint.classList.remove('hidden');
+                    });
+                });
+                return;
+            }
+
+            sections.forEach(section => {
+                const sectionEndpoints = section.querySelectorAll('.endpoint');
+                let hasVisibleEndpoints = false;
+
+                sectionEndpoints.forEach(endpoint => {
+                    const path = endpoint.querySelector('.endpoint-path').textContent.toLowerCase();
+                    const description = endpoint.querySelector('.endpoint-description').textContent.toLowerCase();
+                    const method = endpoint.querySelector('.method').textContent.toLowerCase();
+                    
+                    if (path.includes(searchTerm) || description.includes(searchTerm) || method.includes(searchTerm)) {
+                        endpoint.classList.remove('hidden');
+                        hasVisibleEndpoints = true;
+                    } else {
+                        endpoint.classList.add('hidden');
+                    }
+                });
+
+                // Hide section if no endpoints are visible
+                if (hasVisibleEndpoints) {
+                    section.classList.remove('hidden');
+                } else {
+                    section.classList.add('hidden');
+                }
+            });
+        });
+
+        // Smooth scrolling for navigation links
+        document.querySelectorAll('.nav a').forEach(link => {
+            link.addEventListener('click', function(e) {
+                e.preventDefault();
+                const targetId = this.getAttribute('href').substring(1);
+                const targetElement = document.getElementById(targetId);
+                
+                if (targetElement) {
+                    targetElement.scrollIntoView({
+                        behavior: 'smooth',
+                        block: 'start'
+                    });
+                }
+            });
+        });
+
+        // Copy code block functionality
+        document.querySelectorAll('.code-block').forEach(block => {
+            block.addEventListener('click', function() {
+                const text = this.querySelector('pre').textContent;
+                navigator.clipboard.writeText(text).then(() => {
+                    // Show temporary feedback
+                    const originalBorder = this.style.borderColor;
+                    this.style.borderColor = '#10b981';
+                    setTimeout(() => {
+                        this.style.borderColor = originalBorder;
+                    }, 1000);
+                });
+            });
+            
+            // Add cursor pointer to indicate clickable
+            block.style.cursor = 'pointer';
+            block.title = 'Click to copy';
+        });
+
+        // Add animation to endpoints on scroll
+        const observerOptions = {
+            threshold: 0.1,
+            rootMargin: '0px 0px -50px 0px'
+        };
+
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    entry.target.style.animation = 'slideInFromLeft 0.5s ease-out';
+                }
+            });
+        }, observerOptions);
+
+        endpoints.forEach(endpoint => {
+            observer.observe(endpoint);
+        });
+
+        // Add CSS for slide animation
+        const style = document.createElement('style');
+        style.textContent = `
+            @keyframes slideInFromLeft {
+                from {
+                    transform: translateX(-20px);
+                    opacity: 0;
+                }
+                to {
+                    transform: translateX(0);
+                    opacity: 1;
+                }
+            }
+        `;
+        document.head.appendChild(style);
+    </script>
+</body>
+</html>

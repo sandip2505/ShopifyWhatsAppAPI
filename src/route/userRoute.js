@@ -33,7 +33,8 @@ const apiLimiter = rateLimit({
 const checkApiKey = (req, res, next) => {
   const apiKeyHeader = req.headers["x-api-key"];
   if (!apiKeyHeader || apiKeyHeader !== apiKey) {
-    res.status(403).json({ Error: "Forbidden" });
+    res.render("forbidden"); // or you can use res.status(403).send("Forbidden");
+    // res.status(403).json({ Error: "Forbidden" });
   } else {
     next();
   }
@@ -112,6 +113,24 @@ router.route("/storeReview/:id")
   .put(customerReviewController.updateStoreReview)
   .delete(customerReviewController.deleteStoreReview)
 
+// RatingConfig
+router.post("/ratingConfig", checkApiKey, customerReviewController.addRatingConfig);
+router.get("/ratingConfig/:storeName", checkApiKey, customerReviewController.getRatingConfig);
+router.put("/ratingConfig/:storeName", checkApiKey, customerReviewController.updateRatingConfig);
+router.delete("/ratingConfig/:storeName", checkApiKey, customerReviewController.deleteRatingConfig);
+
+// StoreReviewSetting
+router.post("/storeReviewSetting", checkApiKey, customerReviewController.addStoreReviewSetting);
+router.get("/storeReviewSetting/:storeName", checkApiKey, customerReviewController.getStoreReviewSetting);
+router.put("/storeReviewSetting/:storeName", checkApiKey, customerReviewController.updateStoreReviewSetting);
+router.delete("/storeReviewSetting/:storeName", checkApiKey, customerReviewController.deleteStoreReviewSetting);
+
+// ReaviewSettings
+router.post("/reviewSettings", customerReviewController.addReviewSettings);
+router.get("/reviewSettings/:storeName", customerReviewController.getReviewSettings);
+router.put("/reviewSettings/:storeName", customerReviewController.updateReviewSettings);
+router.delete("/reviewSettings/:storeName", customerReviewController.deleteReviewSettings);
+
 // router.get("/getProducts",customerReviewController.getProducts);
 // router.post("/deleteAllProducts", customerReviewController.deleteAllProducts);
 
@@ -137,5 +156,7 @@ routerIceMajesty.post(
   iceMajestyController.addConfig
 );
 router.use("/ice-majesty", routerIceMajesty);
-
+router.get("/docs", (req, res) => {
+  res.render("docs", { title: "Documentation" });
+})
 module.exports = router;
