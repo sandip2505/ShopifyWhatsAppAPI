@@ -162,6 +162,19 @@ const configurationSchema = new mongoose.Schema({
         type: Boolean,
         default: false,
     },
+    hideHeaderIcons: {
+        type: Boolean,
+        default: false,
+    },
+    locations: {
+        type: Array,
+        default: [
+            {
+                name: "Title",
+                isActive: false,
+            }
+        ],
+    },
 
     created_at: {
         type: Date,

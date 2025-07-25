@@ -268,8 +268,6 @@ customerReview.updateReview = async (req, res) => {
 }
 
 customerReview.storeReview = async (req, res) => {
-  console.log("Received Body:", req.body);
-  console.log("Uploaded Files:", req.files);
   try {
     const { name, email, reviewTitle, rating, reviewMessage, storeName } = req.body;
 
@@ -286,7 +284,6 @@ customerReview.storeReview = async (req, res) => {
       return res.status(400).json({ message: "Rating must be a number between 1 and 5." });
     }
 
-    // Store only image paths
     console.log("Uploaded files:", req.files); // Debugging
 
     const reviewImages = req.files
