@@ -284,8 +284,6 @@ customerReview.storeReview = async (req, res) => {
       return res.status(400).json({ message: "Rating must be a number between 1 and 5." });
     }
 
-    console.log("Uploaded files:", req.files); // Debugging
-
     const reviewImages = req.files
       ? [...new Set(req.files.map(file => file.originalname))]
       : [];

@@ -175,7 +175,14 @@ const configurationSchema = new mongoose.Schema({
             }
         ],
     },
-
+    locationCustomTexts: [{
+        id: String,
+        value: String
+    }],
+    customHtml: {
+        type: String,
+        default: "",
+    },
     created_at: {
         type: Date,
         default: Date.now()
@@ -184,7 +191,6 @@ const configurationSchema = new mongoose.Schema({
         type: Date,
     }
 });
-
 
 const configuration = mongoose.model("configuration", configurationSchema);
 

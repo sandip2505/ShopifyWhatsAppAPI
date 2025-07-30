@@ -154,6 +154,8 @@ stockController.configurationColor = async (req, res) => {
       headerIconColor: 1,
       hideHeaderIcons: 1,
       locations: 1,
+      customHtml: 1,
+      locationCustomTexts: 1,
 
     });
 
@@ -194,6 +196,8 @@ stockController.addConfigurationsColor = async (req, res) => {
       headerIconColor: req.body.headerIconColor,
       hideHeaderIcons: req.body.hideHeaderIcons,
       locations: req.body.locations,
+      customHtml: req.body.customHtml || "",
+      locationCustomTexts: req.body.locationCustomTexts || [],
 
     };
 
