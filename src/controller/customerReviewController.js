@@ -33,17 +33,10 @@ customerReview.addReview = async (req, res) => {
       return res.status(400).json({ message: "Invalid email format." });
     }
 
-    if (mobile) {
-      const mobileRegex = /^\d{10,15}$/; // Adjust regex based on your requirements
-      if (!mobileRegex.test(mobile)) {
-        return res.status(400).json({ message: "Invalid mobile number format." });
-      }
-    }
 
     if (isNaN(rating) || rating < 1 || rating > 5) {
       return res.status(400).json({ message: "Rating must be a number between 1 and 5." });
     }
-
 
 
     const newReview = new Review({

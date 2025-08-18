@@ -1,4 +1,5 @@
 const IceMajestyConfig = require("../schema/iceMajestyConfigSchema.js");
+
 const iceMajestyController = {};
 
 iceMajestyController.addConfig = async (req, res) => {
