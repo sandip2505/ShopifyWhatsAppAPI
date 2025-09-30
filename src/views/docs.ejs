@@ -318,6 +318,7 @@
                 <li><a href="#reviews">Customer Reviews</a></li>
                 <li><a href="#stock">Stock Configuration</a></li>
                 <li><a href="#icemajesty">Ice Majesty</a></li>
+                <li><a href="#autonotify">Auto Notify</a></li>
             </ul>
         </nav>
 
@@ -898,6 +899,35 @@
   -H "Content-Type: multipart/form-data" \
   -F "customImage=@/path/to/image.jpg" \
   -F "config='{\"setting\": \"value\"}';"</pre>
+                </div>
+            </div>
+        </section>
+        <section id="autonotify" class="section">
+            <h2>Auto Notify</h2>
+
+            <div class="endpoint">
+                <div class="endpoint-header">
+                    <span class="method post">POST</span>
+                    <span class="endpoint-path">/api/auto-notify/sendMail</span>
+                </div>
+                <div class="endpoint-description">Send an email notification</div>
+                <div class="parameters">
+                    <h4>Path Parameters:</h4>
+                    <div class="param">
+                        <span class="param-name">to</span>
+                        <span class="param-type">string</span>
+                        - Recipient email address
+                    </div>
+                    <div class="param">
+                        <span class="param-name">subject</span>
+                        <span class="param-type">string</span>
+                        - Email subject
+                    </div>
+                    <div class="param">
+                        <span class="param-name">html</span>
+                        <span class="param-type">string</span>
+                        - HTML content for the email body
+                    </div>
                 </div>
             </div>
         </section>

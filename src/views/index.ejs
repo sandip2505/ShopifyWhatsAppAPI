@@ -221,6 +221,7 @@
             border-radius: 20px;
             padding: 4rem 0;
             margin: 4rem 0;
+            margin-top: 10px!important;
             text-align: center;
         }
 
@@ -454,6 +455,14 @@
                     <div class="endpoint-item">POST /ice-majesty/addConfig</div>
                 </div>
             </div>
+            <div class="feature-card" onclick="showEndpoints('autonotify')">
+                <span class="feature-icon">🔔</span>
+                <h3 class="feature-title">Auto notify</h3>
+                <p class="feature-description">Send email notifications using the auto-notify API</p>
+                <div class="endpoint-list">
+                    <div class="endpoint-item">POST /auto-notify/sendMail</div>
+                </div>
+            </div>
         </div>
     </section>
 
@@ -557,6 +566,9 @@
                 icemajesty: [
                     'GET /ice-majesty/showConfig/:shop - Show shop config',
                     'POST /ice-majesty/addConfig - Add config with image upload'
+                ],
+                autonotify: [
+                    'POST /auto-notify/sendMail - Send email notification'
                 ]
             };
 
@@ -571,7 +583,8 @@
                 'Upsell API': '🟢 Online',
                 'Stock API': '🟢 Online',
                 'User API': '🟢 Online',
-                'Ice Majesty API': '🟢 Online'
+                'Ice Majesty API': '🟢 Online',
+                'Auto Notify API': '🟢 Online'
             };
 
             let statusText = 'API Status:\n\n';
