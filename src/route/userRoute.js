@@ -8,10 +8,12 @@ const upsellController = require("../controller/upsellController");
 const customerReviewController = require("../controller/customerReviewController");
 const stockController = require("../controller/stockController");
 const iceMajestyController = require("../controller/iceMajestyController");
+const autoNotifyController = require("../controller/autoNotifyController");
 const rateLimit = require("express-rate-limit");
 const apiKey = process.env.API_KEY;
 
 const routerIceMajesty = express.Router();
+const routerAutoNotify = express.Router();
 // Setup Multer for file uploads
 const storage = multer.diskStorage({
   destination: function (req, file, cb) {
@@ -33,8 +35,8 @@ const apiLimiter = rateLimit({
 const checkApiKey = (req, res, next) => {
   const apiKeyHeader = req.headers["x-api-key"];
   if (!apiKeyHeader || apiKeyHeader !== apiKey) {
-    res.render("forbidden"); // or you can use res.status(403).send("Forbidden");
-    // res.status(403).json({ Error: "Forbidden" });
+    // res.render("forbidden"); // or you can use res.status(403).send("Forbidden");
+    res.status(403).json({ Error: "Forbidden" });
   } else {
     next();
   }
@@ -109,27 +111,69 @@ router.post(
   customerReviewController.storeReview
 );
 router.get("/storeReview/:storeName", customerReviewController.getStoreReview);
-router.route("/storeReview/:id")
+router
+  .route("/storeReview/:id")
   .put(customerReviewController.updateStoreReview)
-  .delete(customerReviewController.deleteStoreReview)
+  .delete(customerReviewController.deleteStoreReview);
 
 // RatingConfig
-router.post("/ratingConfig", checkApiKey, customerReviewController.addRatingConfig);
-router.get("/ratingConfig/:storeName", checkApiKey, customerReviewController.getRatingConfig);
-router.put("/ratingConfig/:storeName", checkApiKey, customerReviewController.updateRatingConfig);
-router.delete("/ratingConfig/:storeName", checkApiKey, customerReviewController.deleteRatingConfig);
+router.post(
+  "/ratingConfig",
+  checkApiKey,
+  customerReviewController.addRatingConfig
+);
+router.get(
+  "/ratingConfig/:storeName",
+  checkApiKey,
+  customerReviewController.getRatingConfig
+);
+router.put(
+  "/ratingConfig/:storeName",
+  checkApiKey,
+  customerReviewController.updateRatingConfig
+);
+router.delete(
+  "/ratingConfig/:storeName",
+  checkApiKey,
+  customerReviewController.deleteRatingConfig
+);
 
 // StoreReviewSetting
-router.post("/storeReviewSetting", checkApiKey, customerReviewController.addStoreReviewSetting);
-router.get("/storeReviewSetting/:storeName", checkApiKey, customerReviewController.getStoreReviewSetting);
-router.put("/storeReviewSetting/:storeName", checkApiKey, customerReviewController.updateStoreReviewSetting);
-router.delete("/storeReviewSetting/:storeName", checkApiKey, customerReviewController.deleteStoreReviewSetting);
+router.post(
+  "/storeReviewSetting",
+  checkApiKey,
+  customerReviewController.addStoreReviewSetting
+);
+router.get(
+  "/storeReviewSetting/:storeName",
+  checkApiKey,
+  customerReviewController.getStoreReviewSetting
+);
+router.put(
+  "/storeReviewSetting/:storeName",
+  checkApiKey,
+  customerReviewController.updateStoreReviewSetting
+);
+router.delete(
+  "/storeReviewSetting/:storeName",
+  checkApiKey,
+  customerReviewController.deleteStoreReviewSetting
+);
 
 // ReaviewSettings
 router.post("/reviewSettings", customerReviewController.addReviewSettings);
-router.get("/reviewSettings/:storeName", customerReviewController.getReviewSettings);
-router.put("/reviewSettings/:storeName", customerReviewController.updateReviewSettings);
-router.delete("/reviewSettings/:storeName", customerReviewController.deleteReviewSettings);
+router.get(
+  "/reviewSettings/:storeName",
+  customerReviewController.getReviewSettings
+);
+router.put(
+  "/reviewSettings/:storeName",
+  customerReviewController.updateReviewSettings
+);
+router.delete(
+  "/reviewSettings/:storeName",
+  customerReviewController.deleteReviewSettings
+);
 
 // router.get("/getProducts",customerReviewController.getProducts);
 // router.post("/deleteAllProducts", customerReviewController.deleteAllProducts);
@@ -158,5 +202,8 @@ routerIceMajesty.post(
 router.use("/ice-majesty", routerIceMajesty);
 router.get("/docs", (req, res) => {
   res.render("docs", { title: "Documentation" });
-})
+});
+
+routerAutoNotify.post("/sendMail", checkApiKey, autoNotifyController.sendMail);
+router.use("/auto-notify", routerAutoNotify);
 module.exports = router;
