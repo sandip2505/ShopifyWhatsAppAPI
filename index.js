@@ -5,6 +5,8 @@ const bodyParser = require('body-parser');
 const { connectToDatabase } = require('./src/db/db');
 const app = express();
 const path = require('path');
+require('dotenv').config();
+
 
 
 app.use(express.json());
