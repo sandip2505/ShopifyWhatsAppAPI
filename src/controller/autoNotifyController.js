@@ -36,6 +36,7 @@ autoNotifyController.sendMail = async (req, res) => {
       to,
       subject,
       html,
+      replyTo: "noreply@codecrewinfotech.com" 
     };
 
     const info = await transporter.sendMail(mailOptions);

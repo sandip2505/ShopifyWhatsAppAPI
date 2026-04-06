@@ -105,10 +105,18 @@ apicontroller.postWhatsAppData = async (req, res) => {
       selectedIcon,
       popUpMessage,
       enabled,
-      shopName
+      shopName,
+      include_product_details,
+      preFilledValueProductPage
     } = req.body;
-
+    console.log(include_product_details, "include_product_details");
     // Validate required fields 
+    if (include_product_details) {
+      const requiredFields = { mobile_number, position, preFilledValue, selectedIcon, popUpMessage, shopName, preFilledValueProductPage };
+      for (const [field, value] of Object.entries(requiredFields)) {
+        if (!value) return res.status(400).json({ message: `${field.replace(/([A-Z])/g, ' $1').trim()} is required.` });
+      }
+    }
 
     const requiredFields = { mobile_number, position, preFilledValue, selectedIcon, popUpMessage, shopName };
     for (const [field, value] of Object.entries(requiredFields)) {
@@ -127,7 +135,9 @@ apicontroller.postWhatsAppData = async (req, res) => {
       prefield_message: preFilledValue,
       icon: selectedIcon,
       popup_message: popUpMessage,
-      status: enabled
+      status: enabled,
+      include_product_details,
+      preFilledValueProductPage,
     };
 
     const options = {
@@ -142,7 +152,7 @@ apicontroller.postWhatsAppData = async (req, res) => {
       updateData,
       options
     );
-
+    console.log(updatedData, "updatedData");
     // Check if the document was just created or updated
     const wasJustCreated = updatedData.createdAt && updatedData.updatedAt &&
       updatedData.createdAt.getTime() === updatedData.updatedAt.getTime();
@@ -390,7 +400,7 @@ apicontroller.updateHeaderData = async (req, res) => {
     }
 
     // Check if the title already exists for a different header in the same store
-    const existingHeader = await Header.findOne({ title, storename, _id: { $ne: id } , deletedAt: null });
+    const existingHeader = await Header.findOne({ title, storename, _id: { $ne: id }, deletedAt: null });
     if (existingHeader) {
       return res.status(400).json({ message: 'Subject title already exists' });
     }
@@ -427,7 +437,7 @@ apicontroller.deleteHeaderData = async (req, res) => {
 apicontroller.HeaderData = async (req, res) => {
   try {
     const deleteHeader = await Header.find({ deletedAt: null });
-    res.status(200).json({ deleteHeader});
+    res.status(200).json({ deleteHeader });
   } catch (error) {
     console.log(error)
   }

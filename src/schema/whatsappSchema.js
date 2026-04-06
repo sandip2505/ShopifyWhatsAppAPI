@@ -17,6 +17,14 @@ const whatsappSchema = new mongoose.Schema({
     type: String,
     trim: true
   },
+  include_product_details: {
+    type: Boolean,
+    default: false
+  },
+  preFilledValueProductPage: {
+    type: String,
+    trim: true
+  },
   icon: {
     type: String,
     trim: true
