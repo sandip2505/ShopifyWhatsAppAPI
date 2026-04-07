@@ -18,6 +18,7 @@
     "express-rate-limit": "^7.3.1",
     "http": "^0.0.1-security",
     "http-proxy-middleware": "^3.0.0",
+    "libphonenumber-js": "^1.12.41",
     "mongoose": "^6.2.1",
     "multer": "^1.4.5-lts.1",
     "nodemailer": "^7.0.6",

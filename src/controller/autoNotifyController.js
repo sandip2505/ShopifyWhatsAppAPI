@@ -2,17 +2,20 @@ const nodemailer = require("nodemailer");
 const autoNotifyController = {};
 require('dotenv').config();
 
+
 const transporter = nodemailer.createTransport({
-  host: "smtp.gmail.com",
-  port: 587,
-  secure: false,
+  host: process.env.EMAIL_HOST,
+  domain: process.env.EMAIL_DOMAIN,
+  //  service: "gmail",
+  port: 465,
+  // secure: true,  
   auth: {
     user: process.env.EMAIL_USER,
     pass: process.env.EMAIL_PASS,
   },
 });
 
-  console.log(process.env.EMAIL_USER, process.env.EMAIL_PASS);
+console.log(process.env.EMAIL_USER, process.env.EMAIL_PASS);
 
 autoNotifyController.sendMail = async (req, res) => {
   console.log("calling");
@@ -36,7 +39,7 @@ autoNotifyController.sendMail = async (req, res) => {
       to,
       subject,
       html,
-      replyTo: "noreply@codecrewinfotech.com" 
+      replyTo: "noreply@codecrewinfotech.com"
     };
 
     const info = await transporter.sendMail(mailOptions);
