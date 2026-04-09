@@ -11,11 +11,11 @@ const configurationSchema = new mongoose.Schema({
     },
     locationAddress: {
         type: Boolean,
-        default: false,
+        default: true,
     },
     availableQuantity: {
         type: Boolean,
-        default: false,
+        default: true,
     },
     shopName: {
         type: String,
@@ -124,7 +124,7 @@ const configurationSchema = new mongoose.Schema({
     },
     popupbtnBackgroundColor: {
         type: String,
-        default: "#075efc",
+        default: "#000000",
     },
     headerIconColor: {
         type: String,

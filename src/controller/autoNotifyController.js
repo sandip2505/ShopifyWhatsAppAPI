@@ -2,6 +2,16 @@ const nodemailer = require("nodemailer");
 const autoNotifyController = {};
 require('dotenv').config();
 
+// const transporter = nodemailer.createTransport({
+//   host: "smtp.gmail.com",
+//   port: 587,
+//   secure: false,
+//   auth: {
+//     user: 'mail@codecrewinfotech.com',
+//     pass: '?~KjuMjdi]ClO+tM',
+//   },
+// });
+
 
 const transporter = nodemailer.createTransport({
   host: process.env.EMAIL_HOST,
