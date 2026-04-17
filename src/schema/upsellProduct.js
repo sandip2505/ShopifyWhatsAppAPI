@@ -11,10 +11,20 @@ const upsellSchema = mongoose.Schema({
   },
   customSelector: {
     type: String,
+    default: "Cart Drawer",
   },
   products: {
-    type: [String],
-    required: true
+    type: [
+      {
+        productID: {
+          type: String,
+        },
+        variantIDs: {
+          type: [String],
+        },
+      },
+    ],
+    required: true,
   },
   upsellLimit: {
     type: Number,

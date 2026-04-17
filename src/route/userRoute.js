@@ -90,7 +90,7 @@ router.get("/headers", checkApiKey, whatsappController.HeaderData);
 // upsell routes
 
 router.post("/addProduct", upsellController.addProduct);
-router.post("/updateTitle", upsellController.updateTitle);
+router.post("/upsertConfig", upsellController.upsertConfig);
 router.get("/getProducts", upsellController.getProducts);
 router.post("/deleteProduct", upsellController.deleteProduct);
 router.post("/deleteAllProducts", upsellController.deleteAllProducts);
